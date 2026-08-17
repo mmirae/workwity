@@ -4,7 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { WORK_TI_RESULTS } from "@/data/workti/worktiData";
-import { MOCK_JOBS, STAGE_FILTER_OPTIONS } from "@/lib/mock/jobs";
+import { MOCK_JOBS } from "@/lib/mock/jobs";
+import {
+  HIRING_PROCESS_FILTERS,
+  getHiringProcessFilterLabel,
+  resolveExclusiveFilters,
+  type HiringProcessFilterId,
+} from "@/data/hiringProcessFilters";
 import { computeJobMatch } from "@/lib/workti/matchJob";
 import { getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
 import { JobCard } from "@/components/jobs/JobCard";
@@ -49,7 +55,7 @@ export default function JobsPageClient() {
     next.delete("stage");
     const nextStages = selectedStages.includes(key)
       ? selectedStages.filter((s) => s !== key)
-      : [...selectedStages, key];
+      : resolveExclusiveFilters([...selectedStages, key] as HiringProcessFilterId[]);
     nextStages.forEach((s) => next.append("stage", s));
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
@@ -65,15 +71,17 @@ export default function JobsPageClient() {
     [userResult]
   );
 
-  const filtered = jobsWithMatch.filter(({ job }) => selectedStages.every((tag) => job.stageTags.includes(tag)));
+  const filtered = jobsWithMatch.filter(({ job }) =>
+    selectedStages.every((tag) => job.hiringProcessFilterIds.includes(tag as HiringProcessFilterId))
+  );
 
   const sorted = [...filtered].sort((a, b) => {
     if (sortKey === "match") return (b.matchPct ?? 0) - (a.matchPct ?? 0);
     return b.job.postedAt.localeCompare(a.job.postedAt);
   });
 
-  const stageCounts = STAGE_FILTER_OPTIONS.reduce<Record<string, number>>((acc, option) => {
-    acc[option.key] = MOCK_JOBS.filter((job) => job.stageTags.includes(option.key)).length;
+  const stageCounts = HIRING_PROCESS_FILTERS.reduce<Record<string, number>>((acc, filter) => {
+    acc[filter.id] = MOCK_JOBS.filter((job) => job.hiringProcessFilterIds.includes(filter.id)).length;
     return acc;
   }, {});
 
@@ -117,23 +125,23 @@ export default function JobsPageClient() {
             )}
           </div>
           <div className="flex flex-col gap-0.5">
-            {STAGE_FILTER_OPTIONS.map((option) => {
-              const checked = selectedStages.includes(option.key);
+            {HIRING_PROCESS_FILTERS.map((filter) => {
+              const checked = selectedStages.includes(filter.id);
               return (
                 <label
-                  key={option.key}
+                  key={filter.id}
                   className="flex cursor-pointer items-center gap-2.5 rounded-md p-2 hover:bg-gray-50"
                 >
                   <input
                     type="checkbox"
                     checked={checked}
-                    onChange={() => toggleStage(option.key)}
+                    onChange={() => toggleStage(filter.id)}
                     className="size-4 rounded border-gray-300 accent-primary-600"
                   />
                   <span className={checked ? "text-body-sm font-semibold text-gray-950" : "text-body-sm text-gray-700"}>
-                    {option.label}
+                    {filter.label}
                   </span>
-                  <span className="ml-auto text-caption text-gray-400">{stageCounts[option.key]}</span>
+                  <span className="ml-auto text-caption text-gray-400">{stageCounts[filter.id]}</span>
                 </label>
               );
             })}
@@ -195,7 +203,7 @@ export default function JobsPageClient() {
                 company={job.company}
                 companyInitial={job.companyInitial}
                 title={job.title}
-                tags={job.stageTags.map((tag) => STAGE_FILTER_OPTIONS.find((o) => o.key === tag)?.label ?? tag)}
+                tags={job.hiringProcessFilterIds.map(getHiringProcessFilterLabel)}
                 matchPct={matchPct}
               />
             ))}

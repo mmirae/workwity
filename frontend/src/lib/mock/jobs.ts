@@ -1,25 +1,13 @@
 import type { TraitScores } from "@/data/workti/worktiData";
-
-export interface StageFilterOption {
-  key: string;
-  label: string;
-}
-
-/** Same 5 hiring-process tags used throughout the wireframe/prototype. */
-export const STAGE_FILTER_OPTIONS: readonly StageFilterOption[] = [
-  { key: "no-coding", label: "코딩테스트 없음" },
-  { key: "one-interview", label: "면접 1회 이하" },
-  { key: "task", label: "과제 전형" },
-  { key: "portfolio", label: "포트폴리오 필수" },
-  { key: "coffee-chat", label: "커피챗 우선" },
-];
+import type { HiringProcessFilterId } from "@/data/hiringProcessFilters";
 
 export interface MockJob {
   id: string;
   company: string;
   companyInitial: string;
   title: string;
-  stageTags: string[];
+  /** Canonical hiring-process tags — HIRING_PROCESS_FILTERS ids, shared with the company-side AI job-analysis flow. */
+  hiringProcessFilterIds: HiringProcessFilterId[];
   functionCategory: string;
   careerLabel: string;
   /** A fictional company's raw Work-TI scores — fed into
@@ -39,7 +27,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "토스트랩",
     companyInitial: "토",
     title: "프로덕트 디자이너",
-    stageTags: ["no-coding", "one-interview"],
+    hiringProcessFilterIds: ["portfolio", "no_coding_test", "interview_1"],
     functionCategory: "디자인",
     careerLabel: "3년 이상",
     companyScores: { S: 5, L: 1, E: 4, Y: 2, M: 4, D: 2, G: 4, A: 2 },
@@ -58,7 +46,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "뉴런랩스",
     companyInitial: "뉴",
     title: "백엔드 엔지니어",
-    stageTags: ["no-coding", "task"],
+    hiringProcessFilterIds: ["assignment", "no_coding_test", "interview_2"],
     functionCategory: "개발",
     careerLabel: "3~7년",
     companyScores: { S: 3, L: 3, E: 3, Y: 3, M: 2, D: 4, G: 3, A: 3 },
@@ -73,7 +61,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "라잇컴퍼니",
     companyInitial: "라",
     title: "그로스 마케터",
-    stageTags: ["one-interview", "coffee-chat"],
+    hiringProcessFilterIds: ["coffee_chat", "interview_1"],
     functionCategory: "마케팅",
     careerLabel: "2년 이상",
     companyScores: { S: 6, L: 0, E: 5, Y: 1, M: 5, D: 1, G: 5, A: 1 },
@@ -88,7 +76,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "판교스튜디오",
     companyInitial: "판",
     title: "UX 리서처",
-    stageTags: ["portfolio", "task"],
+    hiringProcessFilterIds: ["portfolio", "assignment", "interview_1"],
     functionCategory: "디자인",
     careerLabel: "신입 · 경력",
     companyScores: { S: 1, L: 5, E: 2, Y: 4, M: 1, D: 5, G: 2, A: 4 },
@@ -103,7 +91,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "그리드웍스",
     companyInitial: "그",
     title: "프론트엔드 엔지니어",
-    stageTags: ["no-coding", "one-interview", "coffee-chat"],
+    hiringProcessFilterIds: ["coffee_chat", "no_coding_test", "interview_1"],
     functionCategory: "개발",
     careerLabel: "1~4년",
     companyScores: { S: 4, L: 2, E: 4, Y: 2, M: 4, D: 2, G: 4, A: 2 },
@@ -118,7 +106,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "스테디프레임",
     companyInitial: "스",
     title: "HR 매니저",
-    stageTags: ["portfolio"],
+    hiringProcessFilterIds: ["portfolio", "interview_2"],
     functionCategory: "인사",
     careerLabel: "5년 이상",
     companyScores: { S: 1, L: 5, E: 1, Y: 5, M: 1, D: 5, G: 1, A: 5 },
@@ -133,7 +121,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "오빗라인",
     companyInitial: "오",
     title: "데이터 분석가",
-    stageTags: ["task", "one-interview"],
+    hiringProcessFilterIds: ["assignment", "interview_1"],
     functionCategory: "데이터",
     careerLabel: "2년 이상",
     companyScores: { S: 2, L: 4, E: 3, Y: 3, M: 2, D: 4, G: 4, A: 2 },
@@ -148,7 +136,7 @@ export const MOCK_JOBS: MockJob[] = [
     company: "시드루프",
     companyInitial: "시",
     title: "커뮤니티 매니저",
-    stageTags: ["no-coding", "coffee-chat"],
+    hiringProcessFilterIds: ["coffee_chat", "no_coding_test", "interview_1"],
     functionCategory: "마케팅",
     careerLabel: "신입 · 경력",
     companyScores: { S: 5, L: 1, E: 4, Y: 2, M: 5, D: 1, G: 3, A: 3 },

@@ -1,12 +1,21 @@
 import type { TraitScores } from "@/data/workti/worktiData";
+import type { HiringProcessFilterId } from "@/data/hiringProcessFilters";
 
 export interface CompanyJobPosting {
   id: string;
   title: string;
   status: "발행중" | "마감";
-  stageTags: string[];
   process: string[];
   postedAt: string;
+  /** Canonical hiring-process tags — HIRING_PROCESS_FILTERS ids, shared with the candidate-side Jobs filter. */
+  hiringProcessFilterIds: HiringProcessFilterId[];
+  experience?: string | null;
+  employmentType?: string | null;
+  workMode?: string | null;
+  location?: string | null;
+  responsibilities?: string[];
+  requirements?: string[];
+  preferredQualifications?: string[];
 }
 
 export const SEED_COMPANY_JOBS: CompanyJobPosting[] = [
@@ -14,7 +23,7 @@ export const SEED_COMPANY_JOBS: CompanyJobPosting[] = [
     id: "posting-designer",
     title: "프로덕트 디자이너",
     status: "발행중",
-    stageTags: ["no-coding", "one-interview"],
+    hiringProcessFilterIds: ["portfolio", "no_coding_test", "interview_1"],
     process: ["서류", "포트폴리오 심사", "1차 실무면접"],
     postedAt: "2026-07-20",
   },
@@ -22,7 +31,7 @@ export const SEED_COMPANY_JOBS: CompanyJobPosting[] = [
     id: "posting-backend",
     title: "백엔드 엔지니어",
     status: "발행중",
-    stageTags: ["task"],
+    hiringProcessFilterIds: ["assignment", "interview_1"],
     process: ["서류", "과제 전형", "1차 실무면접"],
     postedAt: "2026-07-25",
   },
