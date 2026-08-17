@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#EFEDE7; font-family:Pretendard,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#2438C8; text-decoration:none; }
+  a:hover { color:#16238C; text-decoration:underline; }
+</style>
+</helmet>
+
+<div style="background:#EFEDE7;color:#17191C;padding:64px 56px 96px;display:flex;flex-direction:column;gap:56px;min-width:1440px">
+
+  <header style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;border-bottom:2px solid #17191C;padding-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#2438C8">WORKWITY</span>
+        <span style="width:1px;height:12px;background:#C9C4B8"></span>
+        <span style="font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#8A8E94">MVP USER FLOW v1.0</span>
+      </div>
+      <h1 style="margin:0;font-size:46px;font-weight:800;letter-spacing:-.035em;line-height:1.1">MVP 사용자 흐름 설계서</h1>
+      <p style="margin:0;font-size:16px;color:#5C6067;max-width:720px;line-height:1.6;text-wrap:pretty">나에게 딱 맞는 회사 찾기, Work with Identity. — 화면의 완성도가 아니라 <strong style="font-weight:700;color:#17191C">흐름의 연결성과 데이터 발생 지점</strong>을 검증하기 위한 문서입니다.</p>
+    </div>
+    <div style="display:flex;gap:28px;padding-bottom:6px">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">MVP 화면</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em">11</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">플로우</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em">4</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C">AI 개입</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em;color:#B0641C">3</span></div>
+    </div>
+  </header>
+
+  <sc-if value="{{ showSummaryMap }}" hint-placeholder-val="{{ true }}">
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#8A8E94;letter-spacing:.12em">00</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">전체 구조 한눈에</h2>
+      <span style="font-size:14px;color:#6E7278">양방향 Work-TI가 하나의 매칭 엔진에서 만난다</span>
+    </div>
+    <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:32px 36px;display:grid;grid-template-columns:1fr 200px 1fr;gap:28px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">JOB SEEKER</span>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="border:1px solid #DFDACF;border-radius:4px;padding:12px 14px;font-size:14px;font-weight:600">Work-TI 테스트 24 + 3문항</div>
+          <div style="border:1px solid #DFDACF;border-radius:4px;padding:12px 14px;font-size:14px;font-weight:600">선호 채용 전형 필터 체크</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="font-size:22px;color:#2438C8">→ ←</div>
+        <div style="background:#17191C;color:#fff;border-radius:6px;padding:18px 20px;text-align:center;display:flex;flex-direction:column;gap:6px;width:100%">
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.12em;color:#8E93A0">MATCHING ENGINE</span>
+          <span style="font-size:15px;font-weight:700">Work Identity Match</span>
+          <span style="font-size:12px;color:#B9BDC6;line-height:1.5">4축 절댓값 거리 → 0~100% 환산 후 정렬</span>
+        </div>
+        <div style="font-size:12px;color:#6E7278">Supabase 단일 쿼리</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+        <span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C">COMPANY / HR</span>
+        <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+          <div style="border:1px solid #DFDACF;border-radius:4px;padding:12px 14px;font-size:14px;font-weight:600;text-align:right">팀 Work-TI 테스트 (조직 관점)</div>
+          <div style="border:1px solid #E4C79E;background:#FDF7EE;border-radius:4px;padding:12px 14px;font-size:14px;font-weight:600;text-align:right;color:#8A4C12">공고 붙여넣기 → AI 자동 태깅</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ① 공통 랜딩 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid #D6D1C5;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#2438C8;letter-spacing:.12em">01</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">공통 랜딩 플로우</h2>
+      <span style="font-size:14px;color:#6E7278">비로그인 진입 · 로그인 게이트는 최대한 뒤로 미룬다</span>
+    </div>
+    <div style="display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">L-01</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">랜딩</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">슬로건 · Work-TI 설명 확인 → [3분 만에 내 Work-TI 알아보기] 클릭</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">익명 세션 발급, 유입 경로 기록. 로그인 요구 없음</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ L-02 역할 선택</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">L-02</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">역할 선택</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">[구직자로 시작] / [기업으로 시작] 중 카드 1개 선택</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">role을 세션에 저장, 이후 모든 라우팅 분기 기준으로 사용</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ J-01 (구직자) / → C-01 (기업)</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#F7F5F0;border:1px dashed #C9C4B8;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#6E7278;border:1px solid #C9C4B8;border-radius:3px;padding:4px 6px">MODAL</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">화면 아님</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">소셜 로그인</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시점</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">테스트를 <strong>다 끝낸 뒤</strong> 결과를 저장하는 순간에만 호출 (구직자) / 공고 등록 직전 (기업)</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">Supabase Auth. 익명 세션의 응답 데이터를 계정에 병합</span>
+        </div>
+      </div>
+    </div>
+    <sc-if value="{{ showRationale }}" hint-placeholder-val="{{ true }}">
+      <div style="border-left:2px solid #2438C8;padding:2px 0 2px 14px;font-size:13px;line-height:1.65;color:#5C6067;max-width:900px">검증 포인트 — 랜딩에서 테스트 시작까지의 이탈률. 역할 선택을 랜딩 안 CTA 두 개로 합쳐 L-02를 없앨 수 있는지 A/B로 확인한다.</div>
+    </sc-if>
+  </section>
+
+  <!-- ② 구직자 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid #D6D1C5;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#2438C8;letter-spacing:.12em">02</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">구직자 플로우</h2>
+      <span style="font-size:14px;color:#6E7278">테스트 → 리포트 → 전형 필터 → 지원. 이탈 없이 한 세션에 끝난다</span>
+    </div>
+    <div style="display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">J-01</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">Work-TI 테스트</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">딜레마 카드 24문항 + 조직 언어 3문항 응답 (3~5분, Progress Bar)</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">응답을 로컬에 즉시 저장(새로고침 복구), 4개 대립 축 점수 누적</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ 로그인 모달 → J-02</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #E4C79E;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">J-02</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C;background:#FDF3E6;border-radius:3px;padding:4px 6px">AI</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">WORK-TI REPORT</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">유형 코드(예: SEMG)·별명·조직 언어 배지 확인, 공유 또는 [내게 맞는 공고 보기]</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">AI</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">16유형 판정(규칙 기반) + OpenAI가 3~4줄 성향 요약문 생성 → 프로필에 캐시(1회만 호출)</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ J-03 대시보드</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">J-03</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#17191C;background:#EDEAE2;border-radius:3px;padding:4px 6px">핵심</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">대시보드 · 전형 필터 + 매칭 리스트</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">상단 리포트 카드 축약본 확인 → [코딩테스트 없음] [1차 면접만] [과제 대체] 등 전형 태그 토글</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">Supabase 단일 쿼리: 태그 AND 필터 → 4축 절댓값 거리로 Match% 산출 → 내림차순 정렬. 필터 조합을 이벤트로 적재(기업 인사이트 원천 데이터)</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ J-04 공고 상세</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #E4C79E;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#2438C8;border:1px solid #2438C8;border-radius:3px;padding:4px 6px">J-04</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C;background:#FDF3E6;border-radius:3px;padding:4px 6px">AI</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">공고 상세 · AI 핏 리포트</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">Match 92% 근거와 전형 프로세스(서류→포트폴리오→1차 실무면접) 확인 → [지원하기]</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">AI</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">"어떤 축이 맞고 어디가 다른지" 2~3문장 근거 생성. (구직자×공고) 단위로 캐시해 재조회 시 비용 0</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ 지원 완료 모달 → J-03 복귀</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#2438C8">→</div>
+
+      <div style="flex:0 0 300px;background:#F7F5F0;border:1px dashed #C9C4B8;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#6E7278;border:1px solid #C9C4B8;border-radius:3px;padding:4px 6px">MODAL</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">화면 아님</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">지원 완료</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">applications 레코드 생성(스냅샷된 Match% 포함), 기업에 알림. 지원 이력 페이지는 v2</span>
+        </div>
+      </div>
+    </div>
+    <sc-if value="{{ showRationale }}" hint-placeholder-val="{{ true }}">
+      <div style="border-left:2px solid #2438C8;padding:2px 0 2px 14px;font-size:13px;line-height:1.65;color:#5C6067;max-width:900px">검증 포인트 — ① 24문항 완주율(3분 내 이탈 지점), ② Match% 수치가 실제 클릭·지원으로 이어지는지, ③ 전형 필터가 검색보다 먼저 쓰이는지. 이 3개가 서비스 가설의 전부다.</div>
+    </sc-if>
+  </section>
+
+  <!-- ③ 기업 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid #D6D1C5;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#B0641C;letter-spacing:.12em">03</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">기업(HR) 플로우</h2>
+      <span style="font-size:14px;color:#6E7278">공고 작성 부담 0. 줄글을 붙여넣으면 AI가 구조화한다</span>
+    </div>
+    <div style="display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#B0641C;border:1px solid #B0641C;border-radius:3px;padding:4px 6px">C-01</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">기업 온보딩 · 팀 Work-TI</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">회사 기본 정보 입력 → 동일한 24+3문항을 '우리 팀이 일하는 방식' 관점으로 응답</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">조직 Work-TI 벡터 산출 → companies에 저장. 이 벡터가 모든 공고의 기본값이 된다</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#B0641C;font-weight:600">→ C-02 공고 등록</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#B0641C">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #E4C79E;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#B0641C;border:1px solid #B0641C;border-radius:3px;padding:4px 6px">C-02</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C;background:#FDF3E6;border-radius:3px;padding:4px 6px">AI</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#17191C;background:#EDEAE2;border-radius:3px;padding:4px 6px">핵심</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">공고 등록 · AI 자동 태깅 검수</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">기존 공고 링크 또는 줄글 붙여넣기 → AI가 뽑은 전형 태그를 한 화면에서 수정/확정 → [발행]</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">AI</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">OpenAI 파싱: 채용 전형 태그(코테·과제·면접 횟수), 직무·경력, 성향 벡터 보정값, 항목별 신뢰도 점수 추출. 신뢰도 낮은 태그는 노란 배지로 표시해 사람이 반드시 보게 함</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#B0641C;font-weight:600">→ 저신뢰 시 A-01 검수 큐 / 정상 시 C-03</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#B0641C">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#B0641C;border:1px solid #B0641C;border-radius:3px;padding:4px 6px">C-03</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">지원자 리스트</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">공고별 지원자를 Match% 순으로 훑어보기</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">지원 시점에 스냅샷된 Match%와 유형 코드를 함께 노출. 정렬만 제공하고 자동 필터링(탈락)은 하지 않음 — 평가 도구가 아니기 때문</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#B0641C;font-weight:600">→ C-04 지원자 상세</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#B0641C">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#B0641C;border:1px solid #B0641C;border-radius:3px;padding:4px 6px">C-04</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">지원자 상세 · 상태 변경</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">지원자 Work-TI 리포트 + 이력 확인 → [검토중 / 합격 / 불합격] 상태 변경</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">상태 업데이트 후 구직자에게 이메일 알림. 메시지 기능 없이 상태값만으로 루프를 닫는다</span>
+          <span style="font-size:11px;font-weight:700;color:#B0641C;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#B0641C;font-weight:600">→ C-03 복귀</span>
+        </div>
+      </div>
+    </div>
+    <sc-if value="{{ showRationale }}" hint-placeholder-val="{{ true }}">
+      <div style="border-left:2px solid #B0641C;padding:2px 0 2px 14px;font-size:13px;line-height:1.65;color:#5C6067;max-width:900px">검증 포인트 — AI 태그의 사람 수정률. 수정률이 30%를 넘으면 프롬프트/태그 사전 문제이며, 이 수치가 콜드 스타트 전략 전체의 생존 지표다.</div>
+    </sc-if>
+  </section>
+
+  <!-- ④ 관리자 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid #D6D1C5;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#5C6067;letter-spacing:.12em">04</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">관리자 플로우</h2>
+      <span style="font-size:14px;color:#6E7278">MVP에서는 화면 1개. AI가 틀렸을 때 사람이 고치는 통로만 있으면 된다</span>
+    </div>
+    <div style="display:flex;align-items:stretch;gap:12px;flex-wrap:wrap">
+      <div style="flex:0 0 300px;background:#F7F5F0;border:1px dashed #C9C4B8;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#6E7278;border:1px solid #C9C4B8;border-radius:3px;padding:4px 6px">AUTH</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">화면 아님</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">어드민 접근</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">별도 로그인 화면 없이 Supabase role=admin 계정만 /admin 라우트 허용</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#6E7278">→</div>
+
+      <div style="flex:0 0 300px;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font:600 11px/1 'JetBrains Mono',monospace;color:#17191C;border:1px solid #17191C;border-radius:3px;padding:4px 6px">A-01</span>
+          <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#A3A79E">MVP</span>
+        </div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.02em">공고 검수 큐</div>
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:6px 10px;align-items:start">
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">행동</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">AI 신뢰도가 낮은 공고를 위에서부터 확인 → 태그 수정 후 [승인] 또는 [반려]</span>
+          <span style="font-size:11px;font-weight:700;color:#9A9E95;padding-top:3px">시스템</span>
+          <span style="font-size:13px;line-height:1.6;color:#3A3E44">발행 상태 전환 + 기업에 알림. 수정 이력은 프롬프트 개선용 학습 로그로 적재</span>
+          <span style="font-size:11px;font-weight:700;color:#2438C8;padding-top:3px">다음</span>
+          <span style="font-size:13px;line-height:1.6;color:#2438C8;font-weight:600">→ 승인 시 공고가 J-03 리스트에 노출</span>
+        </div>
+      </div>
+
+      <div style="flex:0 0 28px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#C9C4B8">→</div>
+
+      <div style="flex:0 0 300px;background:transparent;border:1px dashed #C9C4B8;border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:10px;opacity:.85">
+        <span style="font:600 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">V2</span>
+        <div style="font-size:16px;font-weight:700;color:#5C6067">사용자 관리 · 매칭 품질 대시보드 · 문항 실험 · 신고 처리</div>
+        <div style="font-size:13px;line-height:1.6;color:#6E7278">MVP 기간에는 Supabase 콘솔로 직접 처리한다. 어드민을 만드는 시간은 매칭 품질에 쓴다</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MVP vs V2 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:2px solid #17191C;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#17191C;letter-spacing:.12em">05</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">MVP 범위 · v2 이월</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:start">
+
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <h3 style="margin:0;font-size:18px;font-weight:800">MVP 필수 화면 11개</h3>
+          <span style="font-size:13px;color:#6E7278">모달·로딩·토스트는 화면 수에서 제외</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px">
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">L-01</span><span style="font-size:14px">랜딩</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#B0641C;flex:0 0 34px">C-01</span><span style="font-size:14px">기업 온보딩 · 팀 Work-TI</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">L-02</span><span style="font-size:14px">역할 선택</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#B0641C;flex:0 0 34px">C-02</span><span style="font-size:14px">공고 등록 · AI 태깅 검수</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">J-01</span><span style="font-size:14px">Work-TI 테스트</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#B0641C;flex:0 0 34px">C-03</span><span style="font-size:14px">지원자 리스트</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">J-02</span><span style="font-size:14px">WORK-TI REPORT</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#B0641C;flex:0 0 34px">C-04</span><span style="font-size:14px">지원자 상세 · 상태 변경</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">J-03</span><span style="font-size:14px">대시보드 · 전형 필터</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#17191C;flex:0 0 34px">A-01</span><span style="font-size:14px">공고 검수 큐</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8;flex:0 0 34px">J-04</span><span style="font-size:14px">공고 상세 · AI 핏 리포트</span></div>
+        </div>
+        <div style="border-top:1px solid #EAE6DD;padding-top:16px;font-size:13px;line-height:1.7;color:#5C6067">
+          화면을 줄인 방법 — ① 결과 로딩·소셜 로그인·지원 완료는 <strong style="color:#17191C">화면이 아닌 모달/인터스티셜</strong>로 처리, ② 공고 등록과 AI 태그 검수를 <strong style="color:#17191C">한 화면 두 단계</strong>로 병합, ③ 어드민 로그인은 라우트 가드로 대체, ④ 마이페이지·지원 현황은 대시보드 상단 카드로 흡수.
+        </div>
+      </div>
+
+      <sc-if value="{{ showV2 }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#E7E4DC;border:1px solid #D6D1C5;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <h3 style="margin:0;font-size:18px;font-weight:800;color:#3A3E44">v2로 미뤄도 되는 것</h3>
+          <span style="font-size:13px;color:#6E7278">가설 검증에 기여하지 않는 화면</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:12px"><span style="font:600 10px/1.6 'JetBrains Mono',monospace;letter-spacing:.08em;color:#8A8E94">구직자</span><span style="font-size:14px;line-height:1.65;color:#3A3E44">지원 현황 페이지, 저장한 공고, 재테스트·유형 변화 추이, 리포트 공유 OG 카드, 알림 센터</span></div>
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:12px"><span style="font:600 10px/1.6 'JetBrains Mono',monospace;letter-spacing:.08em;color:#8A8E94">기업</span><span style="font-size:14px;line-height:1.65;color:#3A3E44">채용 전형 선호도 인사이트 대시보드, 기업 브랜딩 페이지, 팀원 초대·권한, 전형 단계별 칸반, 지원자 메시지</span></div>
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:12px"><span style="font:600 10px/1.6 'JetBrains Mono',monospace;letter-spacing:.08em;color:#8A8E94">관리자</span><span style="font-size:14px;line-height:1.65;color:#3A3E44">사용자 관리, 매칭 품질 모니터링, 문항 A/B 실험, 태그 사전 편집, 신고 처리</span></div>
+          <div style="display:grid;grid-template-columns:76px 1fr;gap:12px"><span style="font:600 10px/1.6 'JetBrains Mono',monospace;letter-spacing:.08em;color:#8A8E94">공통</span><span style="font-size:14px;line-height:1.65;color:#3A3E44">결제·수수료 정산, 이력서 빌더, 커피챗 등 특수 전형, 추천 알고리즘 모델</span></div>
+        </div>
+        <div style="border-top:1px solid #D2CDC1;padding-top:16px;font-size:13px;line-height:1.7;color:#5C6067">
+          기준 — <strong style="color:#3A3E44">"이 화면이 없으면 첫 지원이 발생하지 않는가?"</strong> 아니라면 v2. 수익 모델(수수료)조차 첫 매칭이 일어난 뒤의 문제다.
+        </div>
+      </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #D6D1C5;padding-top:20px;display:flex;justify-content:space-between;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#9A9E95">
+    <span>WORKWITY · WORK WITH IDENTITY</span>
+    <span>MVP USER FLOW · 11 SCREENS · 4 FLOWS</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showSummaryMap&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시 옵션&quot;},&quot;showRationale&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시 옵션&quot;},&quot;showV2&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시 옵션&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showSummaryMap: this.props.showSummaryMap ?? true,
+      showRationale: this.props.showRationale ?? true,
+      showV2: this.props.showV2 ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

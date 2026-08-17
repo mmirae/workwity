@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#EFEDE7; font-family:Pretendard,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:#2438C8; text-decoration:none; }
+  a:hover { color:#16238C; text-decoration:underline; }
+</style>
+</helmet>
+
+<div style="background:#EFEDE7;color:#17191C;padding:64px 56px 96px;display:flex;flex-direction:column;gap:52px;min-width:1440px">
+
+  <header style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;border-bottom:2px solid #17191C;padding-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#2438C8">WORKWITY</span>
+        <span style="width:1px;height:12px;background:#C9C4B8"></span>
+        <span style="font:600 12px/1 'JetBrains Mono',monospace;letter-spacing:.14em;color:#8A8E94">INFORMATION ARCHITECTURE · MVP</span>
+      </div>
+      <h1 style="margin:0;font-size:46px;font-weight:800;letter-spacing:-.035em;line-height:1.1">사이트맵 · 정보 구조</h1>
+      <p style="margin:0;font-size:16px;color:#5C6067;max-width:760px;line-height:1.6;text-wrap:pretty">User Flow v1.0의 11개 화면을 URL·내비게이션 계층으로 정리했습니다. <strong style="font-weight:700;color:#17191C">Depth 2를 넘지 않는 것</strong>이 MVP의 원칙입니다.</p>
+    </div>
+    <div style="display:flex;gap:28px;padding-bottom:6px">
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">ROUTES</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em">13</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">MAX DEPTH</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em">2</span></div>
+      <div style="display:flex;flex-direction:column;gap:6px"><span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">GNB 항목</span><span style="font-size:34px;font-weight:800;letter-spacing:-.03em">3</span></div>
+    </div>
+  </header>
+
+  <sc-if value="{{ showLegend }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid #DFDACF;border-radius:5px;padding:14px 20px">
+    <span style="font:600 11px/1 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">LEGEND</span>
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:2px;background:#17191C"></span><span style="font-size:13px;color:#3A3E44">MVP 화면 (라우트 있음)</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:2px;border:1px dashed #8A8E94"></span><span style="font-size:13px;color:#3A3E44">모달 · 라우트 없음</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:2px;background:#E4C79E"></span><span style="font-size:13px;color:#3A3E44">AI 개입 지점</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:2px;background:#EFEDE7;border:1px solid #C9C4B8"></span><span style="font-size:13px;color:#3A3E44">v2 이월</span></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="font:600 11px 'JetBrains Mono',monospace;color:#2438C8">AUTH</span><span style="font-size:13px;color:#3A3E44">로그인 필요</span></div>
+  </div>
+  </sc-if>
+
+  <!-- 최상위 구조 -->
+  <section style="display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;align-items:baseline;gap:14px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#8A8E94;letter-spacing:.12em">00</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">최상위 구조</h2>
+      <span style="font-size:14px;color:#6E7278">역할(role)로 분기되는 3개 공간 + 어드민</span>
+    </div>
+    <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:30px 34px;display:flex;flex-direction:column;align-items:center;gap:0">
+      <div style="background:#17191C;color:#fff;border-radius:5px;padding:12px 24px;font:600 14px 'JetBrains Mono',monospace;letter-spacing:.06em">workwity.com /</div>
+      <div style="width:1px;height:22px;background:#C9C4B8"></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%">
+        <div style="border:1px solid #DFDACF;border-radius:5px;padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">COMMON</span>
+          <span style="font-size:16px;font-weight:700">공통 · 비로그인</span>
+          <span style="font:600 12px 'JetBrains Mono',monospace;color:#5C6067">/ · /start</span>
+        </div>
+        <div style="border:1px solid #2438C8;border-radius:5px;padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center;background:#F4F5FE">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">JOB SEEKER</span>
+          <span style="font-size:16px;font-weight:700">구직자</span>
+          <span style="font:600 12px 'JetBrains Mono',monospace;color:#2438C8">/me · /jobs</span>
+        </div>
+        <div style="border:1px solid #C99B5C;border-radius:5px;padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center;background:#FDF7EE">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C">COMPANY</span>
+          <span style="font-size:16px;font-weight:700">기업 (HR)</span>
+          <span style="font:600 12px 'JetBrains Mono',monospace;color:#B0641C">/company/*</span>
+        </div>
+        <div style="border:1px solid #C9C4B8;border-radius:5px;padding:16px;display:flex;flex-direction:column;gap:8px;align-items:center;background:#F2F0EA">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#5C6067">ADMIN</span>
+          <span style="font-size:16px;font-weight:700">관리자</span>
+          <span style="font:600 12px 'JetBrains Mono',monospace;color:#5C6067">/admin</span>
+        </div>
+      </div>
+      <div style="margin-top:18px;font-size:13px;color:#6E7278;line-height:1.6;text-align:center;max-width:760px">동일 도메인 · 역할별 서브도메인 없음. 로그인 후 <code style="font:600 12px 'JetBrains Mono',monospace;background:#F2F0EA;padding:2px 6px;border-radius:3px">role</code> 값에 따라 <code style="font:600 12px 'JetBrains Mono',monospace;background:#F2F0EA;padding:2px 6px;border-radius:3px">/</code> 진입 시 자동 리다이렉트한다</div>
+    </div>
+  </section>
+
+  <!-- 트리 -->
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid #D6D1C5;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#8A8E94;letter-spacing:.12em">01</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">계층 구조 트리</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+
+      <!-- 공통 -->
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid #EAE6DD;padding-bottom:12px">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">01</span>
+          <h3 style="margin:0;font-size:19px;font-weight:800">공통</h3>
+          <span style="font-size:13px;color:#6E7278">비로그인 진입 · 라우트 3</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono',monospace">
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">랜딩</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">L-01</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/start</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">역할 선택</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">L-02</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/auth/callback</span><span style="font-family:Pretendard;font-size:14px;color:#6E7278">OAuth 리다이렉트 (UI 없음)</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">SYS</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#8A8E94;border-bottom:1px dashed #C9C4B8">Login Modal</span><span style="font-family:Pretendard;font-size:14px;color:#6E7278">전역 오버레이 · 라우트 없음</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">MODAL</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:#F7F5F0;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">GLOBAL NAV</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#3A3E44">비로그인: 로고 · <strong>Work-TI란?</strong>(랜딩 앵커) · <strong>테스트 시작</strong>(CTA) — 별도 소개 페이지를 만들지 않고 랜딩 스크롤 섹션으로 처리</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;border:1px dashed #C9C4B8;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">V2</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#6E7278">/about · /pricing · /blog · /r/:shareId(리포트 공유 페이지) · 이용약관·개인정보(MVP는 푸터 링크로 노션 연결)</div>
+        </div>
+      </div>
+
+      <!-- 구직자 -->
+      <div style="background:#fff;border:1px solid #C7CCF5;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid #EAE6DD;padding-bottom:12px">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">02</span>
+          <h3 style="margin:0;font-size:19px;font-weight:800">구직자</h3>
+          <span style="font-size:13px;color:#6E7278">라우트 4 · 대부분 AUTH</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono',monospace">
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:14px;font-weight:600;color:#17191C">/test</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">Work-TI 테스트</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">J-01</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0 7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#5C6067">/test/:step</span><span style="font-family:Pretendard;font-size:13px;color:#6E7278">문항 진행 상태 (뒤로가기 복구용)</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">SUB</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA;background:#FDFAF5">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/me</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">WORK-TI REPORT + 마이페이지</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#B0641C">AI</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">J-02</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/jobs</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">매칭 공고 리스트 · 전형 필터</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#2438C8">AUTH</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">J-03</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA;background:#FDFAF5">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#17191C">/jobs/:id</span><span style="font-family:Pretendard;font-size:13px;color:#3A3E44">공고 상세 · AI 핏 리포트</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#B0641C">AI</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">J-04</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:28px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#8A8E94;border-bottom:1px dashed #C9C4B8">Apply Modal</span><span style="font-family:Pretendard;font-size:13px;color:#6E7278">지원 확인 · 완료</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">MODAL</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:#F4F5FE;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">GLOBAL NAV</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#3A3E44">로고 · <strong>공고 찾기</strong>(/jobs) · <strong>내 Work-TI</strong>(/me) · 프로필 드롭다운(로그아웃) — 2개면 충분하다</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;border:1px dashed #C9C4B8;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">V2</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#6E7278">/me/applications(지원 현황) · /me/saved(저장한 공고) · /me/settings · /notifications — MVP에선 /me 하단 리스트로 흡수하거나 이메일로 대체</div>
+        </div>
+      </div>
+
+      <!-- 기업 -->
+      <div style="background:#fff;border:1px solid #E4C79E;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid #EAE6DD;padding-bottom:12px">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C">03</span>
+          <h3 style="margin:0;font-size:19px;font-weight:800">기업 (HR)</h3>
+          <span style="font-size:13px;color:#6E7278">라우트 5 · 전부 AUTH</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono',monospace">
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/company/onboarding</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">회사 정보 + 팀 Work-TI</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">C-01</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/company</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">공고 목록 (홈)</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#2438C8">AUTH</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">HUB</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA;background:#FDFAF5">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#17191C">/company/jobs/new</span><span style="font-family:Pretendard;font-size:13px;color:#3A3E44">공고 등록 · AI 태깅 검수</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#B0641C">AI</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">C-02</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">├</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#17191C">/company/jobs/:id</span><span style="font-family:Pretendard;font-size:13px;color:#3A3E44">지원자 리스트 (Match% 정렬)</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">C-03</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:28px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#17191C">…/applicants/:aid</span><span style="font-family:Pretendard;font-size:13px;color:#3A3E44">지원자 상세 · 상태 변경</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">C-04</span>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#5C6067">/company/profile</span><span style="font-family:Pretendard;font-size:13px;color:#6E7278">회사 정보 · 팀 Work-TI 재응답</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">C-05</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:#FDF7EE;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#B0641C">GLOBAL NAV</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#3A3E44">로고 · <strong>공고 관리</strong>(/company) · <strong>회사 프로필</strong> · [+ 공고 등록] 버튼 — 지원자는 공고 하위이므로 GNB에 두지 않는다</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;border:1px dashed #C9C4B8;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">V2</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#6E7278">/company/insights(전형 선호도 인사이트) · /company/team(팀원 초대·권한) · /company/pipeline(전형 단계 칸반) · /c/:slug(공개 기업 브랜딩 페이지) · /company/billing</div>
+        </div>
+      </div>
+
+      <!-- 관리자 -->
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:26px 28px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid #EAE6DD;padding-bottom:12px">
+          <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#5C6067">04</span>
+          <h3 style="margin:0;font-size:19px;font-weight:800">관리자</h3>
+          <span style="font-size:13px;color:#6E7278">라우트 1 · role=admin 가드</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;font-family:'JetBrains Mono',monospace">
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0">
+            <span style="color:#C9C4B8;font-size:13px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:14px;font-weight:600;color:#17191C">/admin</span><span style="font-family:Pretendard;font-size:14px;color:#3A3E44">공고 검수 큐</span></div>
+            <div style="display:flex;gap:5px"><span style="font-size:10px;font-weight:600;color:#2438C8">AUTH</span><span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">A-01</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid #F2F0EA">
+            <span style="color:#C9C4B8;font-size:13px;padding-left:14px">└</span>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:600;color:#8A8E94;border-bottom:1px dashed #C9C4B8">Review Drawer</span><span style="font-family:Pretendard;font-size:13px;color:#6E7278">태그 수정 · 승인 / 반려</span></div>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#A3A79E">MODAL</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;background:#F7F5F0;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">원칙</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#3A3E44">GNB 없음(단일 화면). 사용자·기업 데이터 조회와 수정은 <strong>Supabase 콘솔</strong>로 처리하고, 어드민 UI는 AI 오탐을 사람이 고치는 한 가지 목적에만 쓴다</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;border:1px dashed #C9C4B8;border-radius:4px;padding:14px 16px">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8A8E94">V2</span>
+          <div style="font-family:Pretendard;font-size:13px;line-height:1.65;color:#6E7278">/admin/users · /admin/companies · /admin/matching(매칭 품질 대시보드) · /admin/questions(문항 A/B) · /admin/tags(태그 사전) · /admin/reports(신고)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 원칙 -->
+  <sc-if value="{{ showPrinciples }}" hint-placeholder-val="{{ true }}">
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:baseline;gap:14px;border-top:2px solid #17191C;padding-top:24px">
+      <span style="font:600 12px/1 'JetBrains Mono',monospace;color:#17191C;letter-spacing:.12em">02</span>
+      <h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.025em">IA 설계 원칙</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">01</span>
+        <h4 style="margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em">Depth 2 상한</h4>
+        <p style="margin:0;font-size:13px;line-height:1.65;color:#5C6067">가장 깊은 경로가 /company/jobs/:id/applicants/:aid 하나뿐. 나머지는 모두 2단계 이내로, 브레드크럼 없이 뒤로가기만으로 이동 가능하다</p>
+      </div>
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">02</span>
+        <h4 style="margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em">역할당 GNB 2~3개</h4>
+        <p style="margin:0;font-size:13px;line-height:1.65;color:#5C6067">구직자는 '공고 찾기 / 내 Work-TI', 기업은 '공고 관리 / 회사 프로필'. 메뉴가 늘어나면 무엇이 핵심 행동인지 흐려진다</p>
+      </div>
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">03</span>
+        <h4 style="margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em">필터는 URL 쿼리로</h4>
+        <p style="margin:0;font-size:13px;line-height:1.65;color:#5C6067">전형 필터는 /jobs?stage=no-coding&amp;stage=task 형태의 쿼리 파라미터. 별도 화면을 만들지 않고 공유·복귀 가능한 상태가 된다</p>
+      </div>
+      <div style="background:#fff;border:1px solid #DFDACF;border-radius:6px;padding:22px;display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#2438C8">04</span>
+        <h4 style="margin:0;font-size:16px;font-weight:700;letter-spacing:-.02em">/me는 리포트 겸 마이페이지</h4>
+        <p style="margin:0;font-size:13px;line-height:1.65;color:#5C6067">Work-TI 결과가 곧 프로필이므로 두 화면을 나누지 않는다. 지원 현황도 이 페이지 하단 섹션으로 붙여 라우트를 아낀다</p>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <footer style="border-top:1px solid #D6D1C5;padding-top:20px;display:flex;justify-content:space-between;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#9A9E95">
+    <span>WORKWITY · INFORMATION ARCHITECTURE</span>
+    <span>MVP · 13 ROUTES · MAX DEPTH 2</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showLegend&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시 옵션&quot;},&quot;showPrinciples&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;표시 옵션&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showLegend: this.props.showLegend ?? true,
+      showPrinciples: this.props.showPrinciples ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

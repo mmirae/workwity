@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+<defs>
+<radialGradient id="g"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#eef4ff"/></radialGradient>
+</defs>
+<rect width="900" height="900" fill="white"/>
+<ellipse cx="450" cy="450" rx="270" ry="185" fill="none" stroke="#dfe9ff" stroke-width="2" transform="rotate(18 450 450)"/>
+<ellipse cx="450" cy="450" rx="270" ry="185" fill="none" stroke="#e8eefc" stroke-width="2" transform="rotate(-28 450 450)"/>
+<path d="M450 190 C620 230 690 350 650 470 C600 650 360 690 250 540 C180 430 250 260 450 190" fill="none" stroke="#2563EB" stroke-width="5"/>
+<path d="M690 450 C650 250 430 180 300 280 C180 380 210 610 420 650 C620 690 740 560 690 450" fill="none" stroke="#10B981" stroke-width="5"/>
+<path d="M220 450 C280 310 540 300 640 390 C720 470 590 600 430 620 C280 630 170 560 220 450" fill="none" stroke="#F59E0B" stroke-width="4" opacity=".75"/>
+<path d="M450 700 C260 650 180 470 250 340 C330 200 590 230 650 390 C710 560 600 700 450 700" fill="none" stroke="#7C3AED" stroke-width="4" opacity=".75"/>
+<circle cx="450" cy="450" r="92" fill="url(#g)" stroke="#dbeafe" stroke-width="2"/>
+<text x="450" y="438" text-anchor="middle" font-family="Arial" font-size="48" font-weight="700" fill="#0f172a">92%</text>
+<text x="450" y="478" text-anchor="middle" font-family="Arial" font-size="18" fill="#475569">MATCH</text>
+<circle cx="450" cy="190" r="12" fill="#2563EB"/>
+<circle cx="700" cy="450" r="12" fill="#10B981"/>
+<circle cx="450" cy="710" r="12" fill="#7C3AED"/>
+<circle cx="200" cy="450" r="12" fill="#F59E0B"/>
+<text x="450" y="155" text-anchor="middle" font-family="Arial" font-size="26" font-weight="700">실행</text>
+<text x="735" y="458" font-family="Arial" font-size="26" font-weight="700">결정</text>
+<text x="450" y="760" text-anchor="middle" font-family="Arial" font-size="26" font-weight="700">속도</text>
+<text x="95" y="458" font-family="Arial" font-size="26" font-weight="700">가치</text>
+</svg>
