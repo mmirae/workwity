@@ -5,7 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { createWorkTIResultFromScores } from "@/data/workti/worktiData";
 import { COMPANY_WORK_TI_RESULTS } from "@/data/workti/companyWorktiData";
 import { getCompanyResult } from "@/lib/company/companyStorage";
-import { addCompanyJob, deleteCompanyJob, getCompanyJobs, setCompanyJobStatus } from "@/lib/company/companyJobsStorage";
+import {
+  addCompanyJob,
+  deleteCompanyJob,
+  getCompanyJobs,
+  setCompanyJobStatus,
+  updateCompanyJob,
+} from "@/lib/company/companyJobsStorage";
 import { getApplicantStatus, setApplicantStatus, type ApplicantStatus } from "@/lib/company/applicantStatusStorage";
 import { SEED_APPLICANTS, type CompanyJobPosting } from "@/lib/mock/companyApplicants";
 import { getHiringProcessFilterLabel, type HiringProcessFilterId } from "@/data/hiringProcessFilters";
@@ -23,7 +29,8 @@ import { Toast } from "@/components/ui/Toast";
 import { cn } from "@/lib/cn";
 
 type MainTab = "jobs" | "workti";
-type JobsView = "list" | "new" | "applicants" | "applicant-detail";
+type JobsView = "list" | "new" | "applicant-detail" | "detail";
+type JobDetailTab = "info" | "applicants";
 
 const STATUS_OPTIONS: ApplicantStatus[] = ["신규", "검토중", "합격", "불합격"];
 
@@ -109,6 +116,32 @@ function LabeledTextarea({
   );
 }
 
+function DetailField({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-caption font-semibold text-gray-500">{label}</span>
+      <span className="text-body-sm text-gray-950">{value?.trim() ? value : "-"}</span>
+    </div>
+  );
+}
+
+function DetailListSection({ title, items }: { title: string; items?: string[] }) {
+  return (
+    <div className="flex flex-col gap-2.5 rounded-lg border border-gray-200 bg-white p-6 shadow-xs">
+      <span className="text-body-sm font-bold text-gray-950">{title}</span>
+      {items && items.length > 0 ? (
+        items.map((item, index) => (
+          <span key={index} className="text-body-sm leading-7 text-gray-700">
+            · {item}
+          </span>
+        ))
+      ) : (
+        <span className="text-caption text-gray-400">등록된 내용이 없습니다</span>
+      )}
+    </div>
+  );
+}
+
 function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: string }) {
   return (
     <button
@@ -144,6 +177,8 @@ export default function CompanyMyPageClient() {
 
   const [view, setView] = useState<JobsView>("list");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [jobTab, setJobTab] = useState<JobDetailTab>("info");
+  const [editingJobId, setEditingJobId] = useState<string | null>(null);
   const [jobPendingDelete, setJobPendingDelete] = useState<CompanyJobPosting | null>(null);
   const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<ApplicantStatus | "전체">("전체");
@@ -210,12 +245,53 @@ export default function CompanyMyPageClient() {
   const openJob = (jobId: string) => {
     setSelectedJobId(jobId);
     setStatusFilter("전체");
-    setView("applicants");
+    setJobTab("applicants");
+    setView("detail");
+  };
+
+  const openJobDetail = (jobId: string) => {
+    setSelectedJobId(jobId);
+    setJobTab("info");
+    setView("detail");
   };
 
   const openApplicant = (applicantId: string) => {
     setSelectedApplicantId(applicantId);
     setView("applicant-detail");
+  };
+
+  const resetJobForm = () => {
+    setNewTitle("");
+    setNewText("");
+    setDraft(EMPTY_JOB_DRAFT);
+    setAnalysis("idle");
+    setAnalysisError(null);
+    setEditingJobId(null);
+  };
+
+  const startCreateJob = () => {
+    resetJobForm();
+    setView("new");
+  };
+
+  const startEditJob = (job: CompanyJobPosting) => {
+    setNewTitle(job.title);
+    setNewText("");
+    setDraft({
+      jobTitle: job.title,
+      experience: job.experience ?? "",
+      employmentType: job.employmentType ?? "",
+      workMode: job.workMode ?? "",
+      location: job.location ?? "",
+      responsibilities: (job.responsibilities ?? []).join("\n"),
+      requirements: (job.requirements ?? []).join("\n"),
+      preferredQualifications: (job.preferredQualifications ?? []).join("\n"),
+      hiringProcessFilterIds: job.hiringProcessFilterIds,
+    });
+    setAnalysis("done");
+    setAnalysisError(null);
+    setEditingJobId(job.id);
+    setView("new");
   };
 
   const updateDraft = (patch: Partial<JobDraft>) => setDraft((prev) => ({ ...prev, ...patch }));
@@ -260,17 +336,14 @@ export default function CompanyMyPageClient() {
     showToast("공고가 삭제되었습니다");
   };
 
-  const publishJob = () => {
+  const saveJob = () => {
     if (!newTitle.trim()) {
       showToast("공고 제목을 입력해 주세요");
       return;
     }
-    const posting: CompanyJobPosting = {
-      id: `posting-${Date.now()}`,
+    const fields = {
       title: newTitle.trim(),
-      status: "발행중",
       process: draft.hiringProcessFilterIds.map(getHiringProcessFilterLabel),
-      postedAt: new Date().toISOString().slice(0, 10),
       hiringProcessFilterIds: draft.hiringProcessFilterIds,
       experience: draft.experience.trim() || null,
       employmentType: draft.employmentType.trim() || null,
@@ -280,15 +353,24 @@ export default function CompanyMyPageClient() {
       requirements: splitLines(draft.requirements),
       preferredQualifications: splitLines(draft.preferredQualifications),
     };
-    addCompanyJob(posting);
+
+    if (editingJobId) {
+      updateCompanyJob(editingJobId, fields);
+      showToast("공고가 수정되었습니다");
+    } else {
+      const posting: CompanyJobPosting = {
+        id: `posting-${Date.now()}`,
+        status: "발행중",
+        postedAt: new Date().toISOString().slice(0, 10),
+        ...fields,
+      };
+      addCompanyJob(posting);
+      showToast("공고가 발행되었습니다");
+    }
+
     setJobs(getCompanyJobs());
-    setNewTitle("");
-    setNewText("");
-    setDraft(EMPTY_JOB_DRAFT);
-    setAnalysis("idle");
-    setAnalysisError(null);
+    resetJobForm();
     setView("list");
-    showToast("공고가 발행되었습니다");
   };
 
   const saveApplicantStatus = (status: ApplicantStatus) => {
@@ -347,7 +429,7 @@ export default function CompanyMyPageClient() {
               <h1 className="text-heading-3 text-gray-950">공고 관리</h1>
               <span className="text-body-sm text-gray-500">공고 {jobs.length}개</span>
             </div>
-            <Button variant="primary" size="md" onClick={() => setView("new")}>
+            <Button variant="primary" size="md" onClick={startCreateJob}>
               + 공고 등록
             </Button>
           </div>
@@ -368,7 +450,7 @@ export default function CompanyMyPageClient() {
                   key={job.id}
                   className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-xs transition-colors hover:border-gray-300 hover:bg-gray-50"
                 >
-                  <button type="button" onClick={() => openJob(job.id)} className="flex flex-1 flex-col gap-2 text-left">
+                  <button type="button" onClick={() => openJobDetail(job.id)} className="flex flex-1 flex-col gap-2 text-left">
                     <div className="flex items-center gap-2.5">
                       <span className="text-body-md font-bold text-gray-950">{job.title}</span>
                       <span className="rounded-full bg-primary-100 px-2.5 py-0.5 text-caption font-semibold text-primary-700">
@@ -383,8 +465,28 @@ export default function CompanyMyPageClient() {
                       ))}
                     </div>
                   </button>
-                  <div className="flex items-center gap-3.5">
-                    <span className="text-body-sm text-gray-500">지원자 {count}명</span>
+                  <div className="flex flex-wrap items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => openJob(job.id)}
+                      className="text-body-sm text-gray-500 hover:text-gray-700 hover:underline"
+                    >
+                      지원자 {count}명
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openJobDetail(job.id)}
+                      className="rounded-md border border-gray-200 px-3 py-1.5 text-caption font-semibold text-gray-600 hover:bg-gray-50"
+                    >
+                      공고 보기
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => startEditJob(job)}
+                      className="rounded-md border border-gray-200 px-3 py-1.5 text-caption font-semibold text-gray-600 hover:bg-gray-50"
+                    >
+                      수정
+                    </button>
                     <button
                       type="button"
                       onClick={() => toggleJobStatus(job)}
@@ -409,10 +511,17 @@ export default function CompanyMyPageClient() {
 
       {activeTab === "jobs" && view === "new" && (
         <div className="flex flex-col gap-4">
-          <button type="button" onClick={() => setView("list")} className="w-fit text-body-sm text-gray-500 hover:text-gray-700">
+          <button
+            type="button"
+            onClick={() => {
+              resetJobForm();
+              setView("list");
+            }}
+            className="w-fit text-body-sm text-gray-500 hover:text-gray-700"
+          >
             ← 공고 관리
           </button>
-          <h1 className="text-heading-3 text-gray-950">공고 등록</h1>
+          <h1 className="text-heading-3 text-gray-950">{editingJobId ? "공고 수정" : "공고 등록"}</h1>
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="flex flex-col gap-3.5 rounded-lg border border-gray-200 bg-white p-6 shadow-xs">
@@ -426,7 +535,11 @@ export default function CompanyMyPageClient() {
               />
               <textarea
                 rows={10}
-                placeholder="채용 공고 전문을 붙여넣으세요. 형식은 자유입니다. 예: 우리 회사는 이런 사람을 찾고 있어요..."
+                placeholder={
+                  editingJobId
+                    ? "원문을 다시 붙여넣고 재분석하면 오른쪽 내용을 새로 정리할 수 있어요. (선택사항)"
+                    : "채용 공고 전문을 붙여넣으세요. 형식은 자유입니다. 예: 우리 회사는 이런 사람을 찾고 있어요..."
+                }
                 value={newText}
                 onChange={(e) => setNewText(e.target.value)}
                 className="resize-y rounded-md border border-gray-300 px-3.5 py-3 text-body-sm leading-6 text-gray-950 focus:border-primary-600 focus:outline-none focus:shadow-focus"
@@ -522,11 +635,19 @@ export default function CompanyMyPageClient() {
                   </div>
 
                   <div className="mt-auto flex gap-2.5 pt-2">
-                    <Button variant="secondary" size="md" onClick={() => setView("list")} fullWidth>
-                      임시저장
+                    <Button
+                      variant="secondary"
+                      size="md"
+                      onClick={() => {
+                        resetJobForm();
+                        setView("list");
+                      }}
+                      fullWidth
+                    >
+                      {editingJobId ? "취소" : "임시저장"}
                     </Button>
-                    <Button variant="primary" size="md" onClick={publishJob} fullWidth>
-                      확정하고 발행
+                    <Button variant="primary" size="md" onClick={saveJob} fullWidth>
+                      {editingJobId ? "변경사항 저장" : "확정하고 발행"}
                     </Button>
                   </div>
                 </div>
@@ -536,84 +657,137 @@ export default function CompanyMyPageClient() {
         </div>
       )}
 
-      {activeTab === "jobs" && view === "applicants" && selectedJob && (
+      {activeTab === "jobs" && view === "detail" && selectedJob && (
         <div className="flex flex-col gap-4">
           <button type="button" onClick={() => setView("list")} className="w-fit text-body-sm text-gray-500 hover:text-gray-700">
             ← 공고 관리
           </button>
 
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-heading-3 text-gray-950">{selectedJob.title}</h1>
-            <span className="rounded-full bg-primary-100 px-2.5 py-0.5 text-caption font-semibold text-primary-700">
-              {selectedJob.status}
-            </span>
-            <button
-              type="button"
-              onClick={() => toggleJobStatus(selectedJob)}
-              className="rounded-md border border-gray-200 px-3 py-1.5 text-caption font-semibold text-gray-600 hover:bg-gray-50"
-            >
-              {selectedJob.status === "발행중" ? "마감" : "재오픈"}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white shadow-xs">
-            <div className="flex gap-1 p-2">
-              {(["전체", ...STATUS_OPTIONS] as const).map((status) => (
-                <button
-                  key={status}
-                  type="button"
-                  onClick={() => setStatusFilter(status)}
-                  className={cn(
-                    "rounded-md px-3.5 py-2 text-body-sm font-semibold transition-colors",
-                    statusFilter === status ? "bg-primary-100 text-primary-700" : "text-gray-500 hover:bg-gray-50"
-                  )}
-                >
-                  {status}
-                </button>
-              ))}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-heading-3 text-gray-950">{selectedJob.title}</h1>
+              <span className="rounded-full bg-primary-100 px-2.5 py-0.5 text-caption font-semibold text-primary-700">
+                {selectedJob.status}
+              </span>
+              <button
+                type="button"
+                onClick={() => toggleJobStatus(selectedJob)}
+                className="rounded-md border border-gray-200 px-3 py-1.5 text-caption font-semibold text-gray-600 hover:bg-gray-50"
+              >
+                {selectedJob.status === "발행중" ? "마감" : "재오픈"}
+              </button>
             </div>
-            <span className="pr-5 text-caption text-gray-400">Match 높은 순</span>
+            <Button variant="primary" size="sm" onClick={() => startEditJob(selectedJob)}>
+              수정하기
+            </Button>
           </div>
 
-          {visibleApplicants.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-              <div className="grid grid-cols-[1fr_90px_90px_110px_100px] gap-3.5 border-b border-gray-200 bg-gray-50 px-6 py-3 text-code-sm text-gray-400">
-                <span>지원자</span>
-                <span>WORK-TI</span>
-                <span>MATCH</span>
-                <span>지원일</span>
-                <span>상태</span>
+          <div className="flex gap-6 border-b border-gray-200">
+            <TabButton active={jobTab === "info"} onClick={() => setJobTab("info")}>
+              공고 정보
+            </TabButton>
+            <TabButton active={jobTab === "applicants"} onClick={() => setJobTab("applicants")}>
+              {`지원자 ${jobApplicants.length}명`}
+            </TabButton>
+          </div>
+
+          {jobTab === "info" && (
+            <>
+              <div className="grid grid-cols-2 gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-xs">
+                <DetailField label="희망 경력" value={selectedJob.experience} />
+                <DetailField label="고용 형태" value={selectedJob.employmentType} />
+                <DetailField label="근무 형태" value={selectedJob.workMode} />
+                <DetailField label="근무지" value={selectedJob.location} />
               </div>
-              {visibleApplicants.map(({ applicant, matchPct, status }) => (
-                <button
-                  key={applicant.id}
-                  type="button"
-                  onClick={() => openApplicant(applicant.id)}
-                  className="grid w-full grid-cols-[1fr_90px_90px_110px_100px] items-center gap-3.5 border-b border-gray-100 px-6 py-4 text-left last:border-b-0 hover:bg-gray-50"
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-body-sm font-semibold text-gray-950">{applicant.name}</span>
-                    <span className="text-caption text-gray-400">{applicant.career}</span>
-                  </div>
-                  <span className="text-code-sm text-gray-600">
-                    {createWorkTIResultFromScores(applicant.workTIScores).code}
-                  </span>
-                  <span className="text-body-sm font-bold text-primary-600">{matchPct != null ? `${matchPct}%` : "-"}</span>
-                  <span className="text-body-sm text-gray-500">{applicant.appliedAt}</span>
-                  <span className="text-body-sm text-gray-700">{status}</span>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 p-12 text-center">
-              <span className="text-body-md font-bold text-gray-950">해당 상태의 지원자가 없습니다</span>
-              <span className="text-body-sm text-gray-400">다른 탭을 선택해 보세요</span>
-            </div>
+
+              <div className="flex flex-col gap-2.5 rounded-lg border border-gray-200 bg-white p-6 shadow-xs">
+                <span className="text-body-sm font-bold text-gray-950">채용절차</span>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedJob.hiringProcessFilterIds.length > 0 ? (
+                    selectedJob.hiringProcessFilterIds.map((id) => (
+                      <span
+                        key={id}
+                        className="rounded-sm border border-gray-200 bg-gray-50 px-2.5 py-1 text-caption text-gray-600"
+                      >
+                        {getHiringProcessFilterLabel(id)}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-caption text-gray-400">등록된 채용절차가 없습니다</span>
+                  )}
+                </div>
+              </div>
+
+              <DetailListSection title="주요 업무" items={selectedJob.responsibilities} />
+              <DetailListSection title="자격 요건" items={selectedJob.requirements} />
+              <DetailListSection title="우대 사항" items={selectedJob.preferredQualifications} />
+            </>
           )}
 
-          <p className="text-caption text-gray-400">
-            Match는 참고 지표입니다. Workwity는 Match를 근거로 지원자를 자동 필터링하거나 탈락 처리하지 않습니다.
-          </p>
+          {jobTab === "applicants" && (
+            <>
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white shadow-xs">
+                <div className="flex gap-1 p-2">
+                  {(["전체", ...STATUS_OPTIONS] as const).map((status) => (
+                    <button
+                      key={status}
+                      type="button"
+                      onClick={() => setStatusFilter(status)}
+                      className={cn(
+                        "rounded-md px-3.5 py-2 text-body-sm font-semibold transition-colors",
+                        statusFilter === status ? "bg-primary-100 text-primary-700" : "text-gray-500 hover:bg-gray-50"
+                      )}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+                <span className="pr-5 text-caption text-gray-400">Match 높은 순</span>
+              </div>
+
+              {visibleApplicants.length > 0 ? (
+                <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                  <div className="grid grid-cols-[1fr_90px_90px_110px_100px] gap-3.5 border-b border-gray-200 bg-gray-50 px-6 py-3 text-code-sm text-gray-400">
+                    <span>지원자</span>
+                    <span>WORK-TI</span>
+                    <span>MATCH</span>
+                    <span>지원일</span>
+                    <span>상태</span>
+                  </div>
+                  {visibleApplicants.map(({ applicant, matchPct, status }) => (
+                    <button
+                      key={applicant.id}
+                      type="button"
+                      onClick={() => openApplicant(applicant.id)}
+                      className="grid w-full grid-cols-[1fr_90px_90px_110px_100px] items-center gap-3.5 border-b border-gray-100 px-6 py-4 text-left last:border-b-0 hover:bg-gray-50"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-body-sm font-semibold text-gray-950">{applicant.name}</span>
+                        <span className="text-caption text-gray-400">{applicant.career}</span>
+                      </div>
+                      <span className="text-code-sm text-gray-600">
+                        {createWorkTIResultFromScores(applicant.workTIScores).code}
+                      </span>
+                      <span className="text-body-sm font-bold text-primary-600">
+                        {matchPct != null ? `${matchPct}%` : "-"}
+                      </span>
+                      <span className="text-body-sm text-gray-500">{applicant.appliedAt}</span>
+                      <span className="text-body-sm text-gray-700">{status}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-gray-200 p-12 text-center">
+                  <span className="text-body-md font-bold text-gray-950">해당 상태의 지원자가 없습니다</span>
+                  <span className="text-body-sm text-gray-400">다른 탭을 선택해 보세요</span>
+                </div>
+              )}
+
+              <p className="text-caption text-gray-400">
+                Match는 참고 지표입니다. Workwity는 Match를 근거로 지원자를 자동 필터링하거나 탈락 처리하지 않습니다.
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -621,7 +795,7 @@ export default function CompanyMyPageClient() {
         <div className="flex flex-col gap-4">
           <button
             type="button"
-            onClick={() => setView("applicants")}
+            onClick={() => setView("detail")}
             className="w-fit text-body-sm text-gray-500 hover:text-gray-700"
           >
             ← 지원자 리스트

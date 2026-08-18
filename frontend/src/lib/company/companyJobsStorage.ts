@@ -3,6 +3,9 @@ import { SEED_COMPANY_JOBS, type CompanyJobPosting } from "@/lib/mock/companyApp
 const KEY = "workwity:company-job-postings";
 const STATUS_KEY = "workwity:company-job-status-overrides";
 const DELETED_KEY = "workwity:company-job-deleted-ids";
+const EDITS_KEY = "workwity:company-job-edits";
+
+type CompanyJobEdit = Partial<Omit<CompanyJobPosting, "id" | "status">>;
 
 function readCreated(): CompanyJobPosting[] {
   if (typeof window === "undefined") return [];
@@ -31,12 +34,23 @@ function readDeletedIds(): string[] {
   }
 }
 
+function readEdits(): Record<string, CompanyJobEdit> {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(EDITS_KEY) ?? "{}") as Record<string, CompanyJobEdit>;
+  } catch {
+    return {};
+  }
+}
+
 /** Seed postings + anything created through the "공고 등록" flow this session, minus deleted ones. */
 export function getCompanyJobs(): CompanyJobPosting[] {
   const overrides = readStatusOverrides();
   const deletedIds = readDeletedIds();
+  const edits = readEdits();
   return [...SEED_COMPANY_JOBS, ...readCreated()]
     .filter((job) => !deletedIds.includes(job.id))
+    .map((job) => (edits[job.id] ? { ...job, ...edits[job.id] } : job))
     .map((job) => (overrides[job.id] ? { ...job, status: overrides[job.id] } : job));
 }
 
@@ -65,4 +79,25 @@ export function deleteCompanyJob(id: string): void {
   if (!deletedIds.includes(id)) {
     window.localStorage.setItem(DELETED_KEY, JSON.stringify([...deletedIds, id]));
   }
+}
+
+/**
+ * Demo-level edit: for a user-created posting, updates it in place in the
+ * "created" list. For a seed posting, records the change as an id→edit
+ * override (same pattern as status overrides), merged on top of the seed
+ * data at read time — status is intentionally excluded so an edit never
+ * silently reopens/closes a posting.
+ */
+export function updateCompanyJob(id: string, patch: CompanyJobEdit): void {
+  const created = readCreated();
+  const index = created.findIndex((job) => job.id === id);
+  if (index !== -1) {
+    created[index] = { ...created[index], ...patch, id };
+    window.localStorage.setItem(KEY, JSON.stringify(created));
+    return;
+  }
+
+  const edits = readEdits();
+  edits[id] = patch;
+  window.localStorage.setItem(EDITS_KEY, JSON.stringify(edits));
 }
