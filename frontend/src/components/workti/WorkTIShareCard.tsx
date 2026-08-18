@@ -52,7 +52,7 @@ function ShareAxisCard({ dimension, axis }: { dimension: WorkTIDimension; axis: 
         />
       </div>
       <span style={{ fontSize: 17, fontWeight: 800, color: accent }}>
-        {axis.selectedPercentage}%{axis.isTie ? " · 균형" : ""}
+        {axis.selectedPercentage}%
       </span>
     </div>
   );
@@ -240,7 +240,7 @@ export const WorkTIShareCard = forwardRef<HTMLDivElement, WorkTIShareCardProps>(
           color: "#9ca3af",
         }}
       >
-        Workwity · Work-TI — 일하는 방식을 이해하는 공통 언어
+        Workwity · Work-TI — 업무 성향 기반 채용 플랫폼
       </div>
     </div>
   );

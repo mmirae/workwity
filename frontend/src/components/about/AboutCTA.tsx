@@ -6,7 +6,7 @@ export function AboutCTA() {
     <section className="bg-primary-600 text-center text-white">
       <div className="mx-auto flex max-w-[900px] flex-col items-center gap-8 px-8 py-20 md:py-28">
         <h2 className="text-heading-2">
-          일하는 데 정답은 없지만,
+          일하는 방식에 정답은 없지만,
           <br />
           나에게 맞는 회사는 있습니다.
         </h2>

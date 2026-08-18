@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { AboutBrandSection } from "@/components/about/AboutBrandSection";
-import { WorkIdentitySection } from "@/components/about/WorkIdentitySection";
-import { WorkTISection } from "@/components/about/WorkTISection";
 import { HiringProcessSection } from "@/components/about/HiringProcessSection";
 import { AIJobAnalysisSection } from "@/components/about/AIJobAnalysisSection";
 import { AboutCTA } from "@/components/about/AboutCTA";
@@ -15,8 +13,6 @@ export default function AboutPage() {
   return (
     <>
       <AboutBrandSection />
-      <WorkIdentitySection />
-      <WorkTISection />
       <HiringProcessSection />
       <AIJobAnalysisSection />
       <AboutCTA />

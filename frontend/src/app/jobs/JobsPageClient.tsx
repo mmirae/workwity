@@ -199,9 +199,9 @@ export default function JobsPageClient() {
             {sorted.map(({ job, matchPct }) => (
               <JobCard
                 key={job.id}
+                id={job.id}
                 href={`/jobs/${job.id}`}
                 company={job.company}
-                companyInitial={job.companyInitial}
                 title={job.title}
                 tags={job.hiringProcessFilterIds.map(getHiringProcessFilterLabel)}
                 matchPct={matchPct}

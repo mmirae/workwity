@@ -7,16 +7,12 @@ import { createWorkTIResultFromScores } from "@/data/workti/worktiData";
 import { MOCK_JOBS } from "@/lib/mock/jobs";
 import { computeJobMatch } from "@/lib/workti/matchJob";
 import { buildAiFitSummary } from "@/lib/workti/aiFitSummary";
-import { buildOrbitEntity } from "@/lib/workti/toOrbitEntity";
-import { AXIS_ORDER } from "@/lib/workti/axisMeta";
 import { getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
 import { getApplication, saveApplication } from "@/lib/jobs/applicationStorage";
-import { isJobSaved, toggleSavedJob } from "@/lib/jobs/savedJobsStorage";
 import { recordRecentJob } from "@/lib/jobs/recentJobsStorage";
-import { WorkOrbit } from "@/components/workti/WorkOrbit";
-import { CompareAxisRow } from "@/components/workti/CompareAxisRow";
 import { Button } from "@/components/ui/Button";
 import { ApplyModal } from "@/components/jobs/ApplyModal";
+import { JobSaveHeart } from "@/components/jobs/JobSaveHeart";
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
@@ -24,7 +20,6 @@ export default function JobDetailPage() {
   const job = MOCK_JOBS.find((j) => j.id === params.id);
 
   const [userResult, setUserResult] = useState<StoredWorkTIResult | null | undefined>(undefined);
-  const [saved, setSaved] = useState(false);
   const [applied, setApplied] = useState(false);
   const [applyOpen, setApplyOpen] = useState(false);
 
@@ -34,7 +29,6 @@ export default function JobDetailPage() {
       return;
     }
     setUserResult(getStoredResult());
-    setSaved(isJobSaved(job.id));
     setApplied(Boolean(getApplication(job.id)));
     recordRecentJob(job.id);
   }, [job, router]);
@@ -47,8 +41,6 @@ export default function JobDetailPage() {
   const aiSummary = useMemo(() => (match ? buildAiFitSummary(match) : null), [match]);
 
   if (!job || !companyFull) return null;
-
-  const handleToggleSave = () => setSaved(toggleSavedJob(job.id).includes(job.id));
 
   const handleApplySubmitted = (shareReport: boolean) => {
     saveApplication({
@@ -68,17 +60,15 @@ export default function JobDetailPage() {
 
       <div className="grid items-start gap-6 md:grid-cols-[1fr_348px]">
         <div className="flex flex-col gap-4.5">
-          <div className="flex items-start gap-4.5 rounded-lg border border-gray-200 bg-white p-7 shadow-xs">
-            <span className="flex size-14 shrink-0 items-center justify-center rounded-md bg-primary-100 text-heading-3 font-extrabold text-primary-600">
-              {job.companyInitial}
-            </span>
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-7 shadow-xs">
+            <div className="flex items-center gap-2">
+              <JobSaveHeart jobId={job.id} />
               <span className="text-body-sm text-gray-500">{job.company}</span>
-              <h1 className="text-heading-2 text-gray-950">{job.title}</h1>
-              <span className="text-caption text-gray-400">
-                {job.functionCategory} · {job.careerLabel}
-              </span>
             </div>
+            <h1 className="text-heading-2 text-gray-950">{job.title}</h1>
+            <span className="text-caption text-gray-400">
+              {job.functionCategory} · {job.careerLabel}
+            </span>
           </div>
 
           {match && aiSummary ? (
@@ -166,46 +156,14 @@ export default function JobDetailPage() {
         </div>
 
         <aside className="flex flex-col gap-3.5 md:sticky md:top-22">
-          <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-xs">
+          <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 bg-white p-5 shadow-xs">
             <span className="text-code-sm text-gray-400">TEAM WORK-TI</span>
             <div className="flex items-baseline gap-2.5">
               <span className="text-code-lg text-gray-950">{companyFull.code}</span>
-              <span className="text-body-sm text-gray-500">{companyFull.definition.title}</span>
+              <span className="text-body-sm font-semibold text-gray-700">{companyFull.definition.title}</span>
             </div>
-
-            <div className="flex justify-center">
-              {userResult && match ? (
-                <WorkOrbit
-                  variant="match"
-                  primary={buildOrbitEntity("나", "orbit-user", userResult.axes)}
-                  secondary={buildOrbitEntity("팀", "orbit-company", companyFull.axes)}
-                  matchPercentage={match.percentage}
-                  size={180}
-                />
-              ) : (
-                <WorkOrbit
-                  variant="company"
-                  primary={buildOrbitEntity("팀", "orbit-company", companyFull.axes)}
-                  centerCode={companyFull.code}
-                  size={160}
-                />
-              )}
-            </div>
-
-            {match && (
-              <div className="flex flex-col gap-3.5 border-t border-gray-100 pt-4">
-                {AXIS_ORDER.map((dimension) => (
-                  <CompareAxisRow key={dimension} dimension={dimension} detail={match.axisDetails[dimension]} />
-                ))}
-                <div className="flex gap-3.5 text-caption text-gray-400">
-                  <span className="flex items-center gap-1.5">
-                    <span className="size-2 rounded-full" style={{ background: "var(--color-orbit-user)" }} />나
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="size-2 rounded-full" style={{ background: "var(--color-orbit-company)" }} />팀
-                  </span>
-                </div>
-              </div>
+            {companyFull.definition.description && (
+              <p className="text-caption leading-6 text-gray-500">{companyFull.definition.description}</p>
             )}
           </div>
 
@@ -220,10 +178,6 @@ export default function JobDetailPage() {
               지원하기
             </Button>
           )}
-
-          <Button variant="secondary" size="md" onClick={handleToggleSave} fullWidth>
-            {saved ? "저장 취소" : "공고 저장"}
-          </Button>
 
           <p className="px-1 text-caption leading-6 text-gray-400">
             Work-TI는 합격 가능성을 예측하지 않습니다. 서로의 일하는 방식을 이해하기 위한 참고 지표입니다.

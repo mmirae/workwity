@@ -32,17 +32,17 @@ export function AIJobAnalysisSection() {
   return (
     <section className="border-t border-gray-200 bg-white">
       <div className="mx-auto max-w-[1120px] px-8 py-16 md:py-24">
-        <div className="mx-auto mb-10 flex max-w-[640px] flex-col items-center gap-3.5 text-center">
+        <div className="mx-auto mb-10 flex max-w-[640px] flex-col items-center gap-9 text-center">
           <SectionKicker>AI-ASSISTED JOB ANALYSIS</SectionKicker>
           <h2 className="text-heading-2 text-gray-950">
-            복잡한 공고를
+            기업에게
             <br />
-            찾기 쉬운 정보로 바꿉니다.
+            채용 공고 등록은 더 간편하게 제공합니다.
           </h2>
           <p className="text-body-md leading-8 text-gray-700">
-            기업이 기존 채용 공고의 원문이나 링크를 입력하면, AI가 공고에서 채용 전형과 직무 정보를 찾아
-            정리합니다. 기업은 AI가 정리한 내용을{" "}
-            <strong className="font-bold text-gray-950">직접 확인하고 수정한 뒤 발행합니다.</strong>
+            기존 채용 공고의 원문을 입력하면 AI가 {" "}
+            <strong className="font-bold text-gray-950">채용 전형과 직무 정보를 찾아 정리합니다.</strong>
+            <br />기업은 편리하게 분석된 내용을 직접 확인하고 수정한 뒤 공고를 발행할 수 있습니다.
           </p>
         </div>
 
@@ -115,10 +115,10 @@ export function AIJobAnalysisSection() {
 
         <div className="mt-12 flex flex-col items-center gap-3 text-center">
           <p className="text-body-lg font-bold text-gray-950">
-            AI는 판단자가 아니라, 공고를 읽기 쉽게 정리하는 보조 도구입니다.
+            AI로 공고를 쉽게 정리해보세요.
           </p>
           <p className="max-w-[520px] text-body-md leading-8 text-gray-700">
-            AI가 지원자를 평가하거나 합격 여부를 결정하지 않습니다.
+            AI가 공고 작성을 쉽고 편리하게 도와줍니다.
             <br />
             공고 속 정보를 구조화하고, 최종 확인과 발행은 기업이 직접 진행합니다.
           </p>

@@ -18,12 +18,13 @@ import { AXIS_FULL_LABEL } from "@/lib/workti/axisMeta";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { QuestionCard } from "@/components/workti/QuestionCard";
 import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 
 const TOTAL_STEPS = COMPANY_WORK_TI_QUESTIONS.length + COMPANY_BONUS_QUESTIONS.length;
 const SIZE_OPTIONS = ["1~10명", "11~50명", "51~200명", "200명 이상"];
 const INDUSTRY_OPTIONS = ["IT · 소프트웨어", "핀테크", "커머스", "기타"];
 
-type Phase = "info" | "test" | "loading";
+type Phase = "info" | "test" | "loading" | "login";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -72,10 +73,12 @@ export default function CompanyOnboardingPage() {
     const result = calculateCompanyWorkTIResult(finalMain);
     const badges = getCompanyBonusBadges(finalBonus, false);
     saveCompanyResult({ code: result.code, scores: result.scores, axes: result.axes, bonusBadges: badges });
-    window.setTimeout(() => {
-      login("company");
-      router.push("/company/result");
-    }, 1200);
+    window.setTimeout(() => setPhase("login"), 1200);
+  };
+
+  const handleMockLogin = () => {
+    login("company");
+    router.push("/company/result");
   };
 
   const isMainQuestion = testIndex < COMPANY_WORK_TI_QUESTIONS.length;
@@ -124,6 +127,26 @@ export default function CompanyOnboardingPage() {
           <p className="text-body-lg font-bold text-gray-950">팀 Work-TI를 분석하고 있어요</p>
           <p className="text-body-sm text-gray-500">응답을 바탕으로 조직의 Work Identity를 계산하는 중입니다</p>
         </div>
+      </div>
+    );
+  }
+
+  if (phase === "login") {
+    return (
+      <div className="flex flex-1 items-center justify-center px-8 py-16">
+        <Modal open onClose={() => {}} title="결과를 저장하고 확인하기">
+          <div className="flex flex-col gap-4">
+            <p className="text-body-sm text-gray-500">
+              테스트 응답은 저장되어 있습니다. 계속하면 우리 팀의 Work-TI 결과를 확인할 수 있습니다.
+            </p>
+            <Button variant="primary" size="lg" onClick={handleMockLogin} fullWidth>
+              기업으로 계속하기
+            </Button>
+            <p className="text-caption text-gray-400">
+              현재는 데모 버전으로, 실제 로그인 없이 결과를 확인할 수 있습니다.
+            </p>
+          </div>
+        </Modal>
       </div>
     );
   }

@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { LandingLoginButton } from "@/components/landing/LandingLoginButton";
 import { CompassIcon, OverlapCirclesIcon, TimerIcon } from "@/components/landing/icons";
+import { WorkTISection } from "@/components/about/WorkTISection";
+import { WorkIdentitySection } from "@/components/about/WorkIdentitySection";
 
 const FEATURES = [
   {
@@ -96,95 +98,47 @@ export default function LandingPage() {
       <section className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-6 px-8 py-18 text-center md:py-24">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 px-3.5 py-1.5 text-body-sm font-semibold text-primary-600">
-            <span className="size-1.5 rounded-full bg-primary-600" />
-            Work-TI · 3분이면 충분합니다
+            업무 성향 기반 채용 플랫폼
           </span>
           <h1 className="max-w-[760px] text-display-xl text-gray-950">
-            나에게 딱 맞는 회사 찾기,
+            채용 방식부터, 일하는 방식까지.
             <br />
-            <span className="text-primary-600">Work with Identity.</span>
+            <span className="text-primary-600">나와 맞는 회사를 찾아보세요.</span>
           </h1>
           <p className="max-w-[560px] text-body-lg text-gray-600">
-            구직자와 기업이 함께 Work-TI를 진행하고, 서로의 일하는 방식이 얼마나 맞는지 확인합니다. 능력을 평가하지
-            않습니다.
+            구직자와 기업이 각각 Work-TI 테스트로 업무 성향을 알아보고, 
+            <br />
+            서로의 일하는 방식이 얼마나 잘 맞는지 확인합니다.
           </p>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
             <Button variant="primary" size="lg" href="/test/start">
-              3분 만에 내 Work-TI 알아보기 →
+              Work-TI 테스트 시작하기 →
             </Button>
-            <LandingLoginButton />
           </div>
-          <span className="text-caption text-gray-500">회원가입 없이 바로 시작 · 결과 저장 시에만 로그인</span>
+          <span className="text-caption text-gray-500">30문항, 약 3분 소요</span>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="mx-auto flex max-w-[1200px] flex-col gap-11 px-8 py-14 md:py-20">
-        <div className="flex flex-col items-center gap-3 text-center">
-          <span className="text-code-sm text-primary-600">HOW IT WORKS</span>
-          <h2 className="text-heading-2 text-gray-950">Work-TI란 무엇인가요?</h2>
-          <p className="max-w-[520px] text-body-md text-gray-600">
-            업무 능력을 평가하는 테스트가 아닙니다. 서로의 일하는 방식을 이해하기 위한 공통 언어입니다.
-          </p>
-        </div>
-        <div className="grid gap-5 md:grid-cols-3">
-          {FEATURES.map((feature) => (
-            <Card key={feature.title} variant="base" className="flex flex-col gap-3.5">
-              <div className="flex size-11 items-center justify-center rounded-md bg-primary-100 text-primary-600">
-                {feature.icon}
-              </div>
-              <h3 className="text-heading-3 text-gray-950">{feature.title}</h3>
-              <p className="text-body-sm text-gray-600">{feature.body}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <WorkTISection />
 
-      {/* Work Identity Match */}
-      <section className="border-y border-gray-200 bg-white">
-        <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-8 py-14 md:grid-cols-2 md:py-20">
-          <div className="flex flex-col gap-4">
-            <span className="text-code-sm text-primary-600">WORK IDENTITY MATCH</span>
-            <h2 className="text-heading-2 text-gray-950">
-              맞는 회사인지,
-              <br />
-              지원하기 전에 압니다
-            </h2>
-            <p className="text-body-md text-gray-600">
-              구직자의 Work-TI와 기업 팀의 Work-TI를 4개 축으로 비교해 Match를 계산합니다. 원하는 채용 전형으로
-              공고를 걸러낼 수도 있습니다.
-            </p>
-            <ul className="mt-1 flex flex-col gap-2.5">
-              {MATCH_CHECKLIST.map((item) => (
-                <CheckBullet key={item}>{item}</CheckBullet>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex flex-col gap-3.5 rounded-lg border border-gray-200 bg-gray-50 p-6">
-            <MatchPreviewCard
-              company="토스트랩"
-              title="프로덕트 디자이너"
-              tags={["코테 없음", "면접 1회"]}
-              matchPercentage={92}
-              emphasized
-            />
-            <MatchPreviewCard
-              company="뉴런랩스"
-              title="UX 디자이너"
-              tags={["과제 전형"]}
-              matchPercentage={74}
-            />
-          </div>
-        </div>
-      </section>
+      {/* Work Identity */}
+      <WorkIdentitySection />
 
       {/* Final CTA */}
-      <section className="mx-auto flex max-w-[1200px] flex-col items-center gap-5 px-8 py-20 text-center md:py-24">
-        <h2 className="text-heading-2 text-gray-950">3분이면, 나에게 맞는 회사가 보입니다</h2>
-        <Button variant="primary" size="lg" href="/test/start">
-          Work-TI 테스트 시작하기 →
-        </Button>
+      <section className="bg-gray-50">
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-5 px-8 py-20 text-center md:py-24">
+          <h2 className="text-heading-2 text-gray-950">채용의 새로운 시작, 워크위티</h2>
+          <Button
+            variant="primary"
+            size="lg"
+            href="https://open.kakao.com/o/sz9GIwJi"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            기업 서비스 문의하기 →
+          </Button>
+        </div>
       </section>
     </>
   );

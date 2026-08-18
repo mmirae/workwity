@@ -50,8 +50,8 @@ export function HiringFilterDemo() {
   const filteredJobs = DEMO_JOBS.filter((job) => selected.every((label) => job.tags.includes(label)));
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-gray-50 p-7 md:p-9">
-      <div className="mb-4 text-body-sm font-bold text-gray-700">원하는 전형만 골라보세요.</div>
+    <div className="rounded-xl bg-gray-50 p-7 md:p-9">
+      <div className="mb-4 text-body-sm font-bold text-gray-700">전형 필터가 어떻게 작동하는지 체험해보세요.</div>
       <div className="mb-7 flex flex-wrap gap-2.5">
         {FILTER_LABELS.map((label) => (
           <Chip key={label} selected={selected.includes(label)} onClick={() => toggle(label)}>

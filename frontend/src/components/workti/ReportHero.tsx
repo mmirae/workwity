@@ -28,8 +28,15 @@ export function ReportHero({ kicker, code, title, catchphrase, tags, characterIc
         {actions && <div className="flex shrink-0 gap-2.5">{actions}</div>}
       </div>
 
-      <div className="flex flex-col gap-8 px-8 pb-8 pt-6 sm:min-h-[340px] sm:flex-row sm:items-stretch sm:gap-6 sm:px-10 sm:pb-0 sm:pt-4">
-        <div className="flex flex-col justify-center gap-4 sm:w-[57%] sm:shrink-0 sm:pb-10">
+      <div className="flex flex-col gap-8 px-8 pb-8 pt-6 sm:min-h-[372px] sm:flex-row sm:items-stretch sm:gap-6 sm:px-10 sm:pb-0 sm:pt-4">
+        {/*
+          `sm:pb-[72px]` (base pb-10's 40px + the 32px added to min-h above)
+          keeps this column's own visible/centered content area exactly what
+          it was before the Hero grew those 32px to give the character (right
+          column) real vertical breathing room — this column's position is
+          unaffected by that change.
+        */}
+        <div className="flex flex-col justify-center gap-4 sm:w-[57%] sm:shrink-0 sm:pb-[72px]">
           <div className="flex flex-col gap-0.5">
             {/*
               Typography color hierarchy: code (brand blue) reads first, then
@@ -58,18 +65,20 @@ export function ReportHero({ kicker, code, title, catchphrase, tags, characterIc
 
         {/*
           Frameless hero illustration — object-contain only (never cropped or
-          stretched; source art isn't uniformly square). `items-end` +
-          `object-bottom` keep the character's own base anchored to the
-          hero's floor regardless of its PNG's native aspect ratio.
+          stretched; source art isn't uniformly square). The character art is
+          tall relative to its box, so object-contain already fills the box's
+          full height with no vertical slack to speak of; `items-center` keeps
+          it looking centered in the hero's right column instead of flush
+          against the card's bottom edge.
         */}
-        <div className="flex justify-center sm:w-[43%] sm:shrink-0 sm:items-end sm:justify-center">
+        <div className="flex justify-center sm:w-[43%] sm:shrink-0 sm:items-center sm:justify-center">
           <div className="relative h-[220px] w-full max-w-[300px] sm:h-[320px] sm:max-w-[400px]">
             <WorkTICharacterImage
               code={code}
               fallbackIcon={characterIcon}
               size={320}
               frameless
-              className="absolute inset-0 object-bottom"
+              className="absolute inset-0 object-center"
             />
           </div>
         </div>

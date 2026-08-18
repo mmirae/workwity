@@ -43,13 +43,13 @@ export function WorkTISection() {
     <section className="bg-gray-50">
       <div className="mx-auto grid max-w-[1140px] items-center gap-16 px-8 py-16 md:grid-cols-[0.95fr_1.05fr] md:py-24">
         <div className="flex flex-col gap-5">
-          <SectionKicker>WORK-TI</SectionKicker>
-          <h2 className="text-heading-2 text-gray-950">일하는 데 정답은 없습니다.</h2>
+          <SectionKicker>HOW IT WORKS</SectionKicker>
+          <h2 className="text-heading-2 text-gray-950">Work-TI란 무엇인가요?</h2>
           <p className="text-body-md leading-8 text-gray-700">
-            그래서 Work-TI는 누가 더 뛰어난지를 평가하지 않습니다.
+            워크티는 구직자와 기업이 일하는 방식의 대한 이해를 돕기 위한 테스트로, <br />
           </p>
           <p className="text-body-md leading-8 text-gray-700">
-            구직자와 기업이 몇 가지 질문을 통해 자신의 업무 성향을 가볍게 확인하고, 서로 어떤 방식으로 일하기를
+            구직자와 기업이 각각 자신의 업무 성향을 가볍게 확인하고, 서로 어떤 방식으로 일하기를
             선호하는지 이해하기 위한 테스트입니다.
           </p>
           <div className="flex flex-col gap-2">
@@ -64,9 +64,6 @@ export function WorkTISection() {
           </div>
           <p className="text-body-md leading-7 text-gray-700">
             두 결과는 채용 과정에서 서로를 이해하기 위한 참고 정보로 활용됩니다.
-          </p>
-          <p className="text-body-md font-bold leading-8 text-gray-950">
-            Work-TI는 업무 능력, 성과, 인성 또는 채용 적합성을 평가하는 검사가 아닙니다.
           </p>
 
           <div className="flex items-start gap-2.5">

@@ -43,7 +43,7 @@ function AxisStyleCard({ dimension, axis }: { dimension: WorkTIDimension; axis: 
         />
       </div>
       <span className="text-heading-3 font-extrabold" style={{ color: accent }}>
-        {axis.selectedPercentage}%{isBalanced ? " · 균형" : ""}
+        {axis.selectedPercentage}%
       </span>
     </div>
   );

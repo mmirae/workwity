@@ -2,21 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { WORK_TI_RESULT_DETAILS, WORK_TI_RESULTS } from "@/data/workti/worktiData";
 import { clearStoredAnswers, getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
 import { WorkTIReportCard } from "@/components/workti/WorkTIReportCard";
 import { WorkTIResultDetailSections } from "@/components/workti/WorkTIResultDetailSections";
 import { WorkTIShareCard } from "@/components/workti/WorkTIShareCard";
-import { SectionHeader } from "@/components/workti/SectionHeader";
 import { NextAction } from "@/components/workti/NextAction";
 import { Button } from "@/components/ui/Button";
 import { Toast } from "@/components/ui/Toast";
-
-const RECOMMENDED_JOBS = [
-  { title: "프로덕트 디자이너", company: "토스트랩", tags: ["코테 없음", "면접 1회"], matchPct: 92 },
-  { title: "백엔드 엔지니어", company: "뉴런랩스", tags: ["코테 없음", "과제 전형"], matchPct: 87 },
-];
 
 export default function MyWorkTIPage() {
   const router = useRouter();
@@ -94,53 +87,15 @@ export default function MyWorkTIPage() {
 
       <WorkTIResultDetailSections detail={detail} bonusBadges={result.bonusBadges} />
 
-      <div className="flex flex-col gap-5">
-        <div className="flex items-start justify-between gap-4">
-          <SectionHeader
-            eyebrow="SECTION 05 · MATCH"
-            title="나와 잘 맞는 회사의 공고"
-            subtitle="내 Work-TI와 업무 환경이 잘 맞는 회사의 채용공고예요. 능력이나 합격 가능성이 아니라, 일하는 방식의 궁합을 보여줘요."
-          />
-          <Link
-            href="/jobs"
-            className="shrink-0 text-body-sm font-semibold text-primary-600 hover:text-primary-700"
-          >
-            모두 보기 →
-          </Link>
-        </div>
-        <div className="flex flex-col gap-3">
-          {RECOMMENDED_JOBS.map((job) => (
-            <div
-              key={job.title}
-              className="flex items-center justify-between gap-4 rounded-md border border-gray-200 p-4.5"
-            >
-              <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="text-body-sm text-gray-500">{job.company}</span>
-                  <span className="text-body-md font-bold text-gray-950">{job.title}</span>
-                </div>
-                <div className="flex gap-1.5">
-                  {job.tags.map((tag) => (
-                    <span key={tag} className="rounded-sm border border-gray-200 px-2 py-0.5 text-caption text-gray-600">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 rounded-md bg-primary-50 px-4 py-2.5">
-                <span className="text-body-md font-extrabold text-primary-600">{job.matchPct}%</span>
-                <span className="text-code-sm text-primary-600">MATCH</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <NextAction
-        description="내 결과를 공유하거나 이미지로 저장해 보세요"
-        primary={{ label: "결과 공유하기", onClick: handleShare }}
-        secondary={{ label: "이미지 저장하기", onClick: handleSaveImage }}
-        textCta={{ label: "나와 잘 맞는 회사의 공고 더 보기 →", href: "/jobs" }}
+        eyebrow="NEXT STEP"
+        title="나와 맞는 회사를 찾아보세요."
+        description="Work-TI 결과를 바탕으로 나와 일하는 방식이 잘 맞는 회사의 공고를 확인해보세요."
+        primary={{ label: "나와 잘 맞는 공고 보기 →", href: "/jobs" }}
+        secondaryActions={[
+          { label: "결과 공유하기", onClick: handleShare },
+          { label: "이미지 저장하기", onClick: handleSaveImage },
+        ]}
       />
 
       <Toast message={toast} />
