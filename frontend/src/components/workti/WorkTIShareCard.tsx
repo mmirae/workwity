@@ -102,22 +102,14 @@ export const WorkTIShareCard = forwardRef<HTMLDivElement, WorkTIShareCardProps>(
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span
-            style={{
-              display: "flex",
-              width: 26,
-              height: 26,
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 8,
-              background: "#2563eb",
-              color: "#ffffff",
-              fontSize: 14,
-              fontWeight: 800,
-            }}
-          >
-            W
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element -- rasterized off-screen via html2canvas-pro; next/image's optimizer proxy breaks that capture. */}
+          <img
+            src="/brand/workwity-symbol.png"
+            alt=""
+            width={26}
+            height={26}
+            style={{ display: "block", width: 26, height: 26, maxWidth: "none" }}
+          />
           <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.01em" }}>Workwity</span>
         </div>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>

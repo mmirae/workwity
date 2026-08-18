@@ -168,7 +168,9 @@ function StatCard({ label, value }: { label: string; value: string }) {
 
 export default function CompanyMyPageClient() {
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<MainTab>(searchParams.get("tab") === "workti" ? "workti" : "jobs");
+  // No in-page tab switcher anymore (global nav already has both destinations) — `activeTab` is only
+  // ever set once, from the URL, so it's a derived value rather than state with an unused setter.
+  const activeTab: MainTab = searchParams.get("tab") === "workti" ? "workti" : "jobs";
 
   const [ready, setReady] = useState(false);
   const [companyResult, setCompanyResult] = useState<StoredWorkTIResult | null>(null);
@@ -384,15 +386,6 @@ export default function CompanyMyPageClient() {
 
   return (
     <div className="mx-auto flex max-w-[1200px] flex-col gap-6 px-8 py-8">
-      <div className="flex gap-6 border-b border-gray-200">
-        <TabButton active={activeTab === "jobs"} onClick={() => setActiveTab("jobs")}>
-          공고 관리
-        </TabButton>
-        <TabButton active={activeTab === "workti"} onClick={() => setActiveTab("workti")}>
-          기업 Work-TI
-        </TabButton>
-      </div>
-
       {activeTab === "workti" &&
         (companyResult ? (
           <WorkTIReportCard

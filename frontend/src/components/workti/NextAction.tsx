@@ -67,7 +67,7 @@ export function NextAction({
     <div
       className={
         isGroupedLayout
-          ? "flex flex-col items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center"
+          ? "flex flex-col items-center gap-2.5 rounded-lg border border-primary-100 bg-primary-50 p-8 text-center"
           : "flex flex-col items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-10 text-center"
       }
     >

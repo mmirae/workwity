@@ -15,17 +15,9 @@ import { WorkTISummary } from "@/components/workti/WorkTISummary";
 import { SectionHeader } from "@/components/workti/SectionHeader";
 import { FitSection } from "@/components/workti/FitSection";
 import { CommunicationGrid } from "@/components/workti/CommunicationGrid";
+import { StyleColumn } from "@/components/workti/StyleColumn";
 import { NextAction } from "@/components/workti/NextAction";
 import { Button } from "@/components/ui/Button";
-
-function EnvironmentBlock({ label, text }: { label: string; text: string }) {
-  return (
-    <div className="flex flex-col gap-2.5 border-t-2 border-gray-950 pt-4">
-      <span className="text-body-sm font-bold text-gray-950">{label}</span>
-      <p className="text-body-md leading-7 text-gray-600">{text}</p>
-    </div>
-  );
-}
 
 export default function CompanyResultPage() {
   const router = useRouter();
@@ -78,13 +70,13 @@ export default function CompanyResultPage() {
       <AxisStyleGrid axes={result.axes} />
       <WorkTISummary text={definition.description} />
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         <SectionHeader eyebrow="SECTION 01" title="우리 팀의 업무 환경" />
-        <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-          <EnvironmentBlock label="업무 진행 방식" text={definition.workStyle} />
-          <EnvironmentBlock label="의사결정 방식" text={definition.decisionStyle} />
-          <EnvironmentBlock label="속도 · 품질 기준" text={definition.qualityStyle} />
-          <EnvironmentBlock label="성장 · 안정 환경" text={definition.growthStyle} />
+        <div className="grid gap-6 sm:grid-cols-2">
+          <StyleColumn label="업무 진행 방식" text={definition.workStyle} />
+          <StyleColumn label="의사결정 방식" text={definition.decisionStyle} />
+          <StyleColumn label="속도 · 품질 기준" text={definition.qualityStyle} />
+          <StyleColumn label="성장 · 안정 환경" text={definition.growthStyle} />
         </div>
       </div>
 
@@ -92,17 +84,28 @@ export default function CompanyResultPage() {
         eyebrow="SECTION 02 · FIT"
         title="이런 구성원이 잘 맞아요"
         summary={definition.goodFit}
+        points={definition.goodFitPoints}
       />
 
       <div className="flex flex-col gap-5">
         <SectionHeader eyebrow="SECTION 03" title="함께 일할 때 체크할 점" />
-        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-7">
-          <p className="text-body-sm leading-6 text-gray-700">{definition.caution}</p>
-          <div className="h-px bg-gray-100" aria-hidden="true" />
-          <p className="text-caption leading-6 text-gray-400">
-            이 결과는 조직이나 사람의 우열을 평가하지 않으며, 업무 방식의 차이를 설명하기 위한 참고 정보입니다.
-          </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-2.5 rounded-lg border border-gray-200 bg-white p-6">
+            <h3 className="flex items-center gap-1.5 text-body-md font-bold text-gray-950">
+              <span aria-hidden="true">⚠️</span> 함께 일할 때 주의할 점
+            </h3>
+            <p className="text-body-sm leading-6 text-gray-600">{definition.caution}</p>
+          </div>
+          <div className="flex flex-col gap-2.5 rounded-lg border border-gray-200 bg-white p-6">
+            <h3 className="flex items-center gap-1.5 text-body-md font-bold text-gray-950">
+              <span aria-hidden="true">🤝</span> 더 잘 맞춰 일하기 위한 팁
+            </h3>
+            <p className="text-body-sm leading-6 text-gray-600">{definition.collaborationTip}</p>
+          </div>
         </div>
+        <p className="text-caption leading-6 text-gray-400">
+          이 결과는 조직이나 사람의 우열을 평가하지 않으며, 업무 방식의 차이를 설명하기 위한 참고 정보입니다.
+        </p>
       </div>
 
       <div className="flex flex-col gap-5">
@@ -113,7 +116,7 @@ export default function CompanyResultPage() {
       <NextAction
         description="이 Work-TI를 채용공고에 적용하면 구직자의 Work-TI와 비교한 업무환경 궁합을 보여줄 수 있습니다."
         primary={{ label: "이 Work-TI를 채용공고에 적용하기", href: "/company/mypage?tab=jobs" }}
-        secondary={{ label: "테스트 다시 하기", href: "/company/onboarding" }}
+        secondaryActions={[{ label: "테스트 다시 하기", href: "/company/onboarding" }]}
         textCta={{ label: "기업 마이페이지로 이동", href: "/company/mypage" }}
       />
     </div>

@@ -4,8 +4,8 @@ interface FitSectionProps {
   eyebrow: string;
   title: string;
   summary: string;
-  /** Omit for datasets that only have a single summary sentence (e.g. the company's `goodFit`). */
-  points?: string[];
+  /** Omit for datasets that only have a single summary sentence, no bullet breakdown. */
+  points?: readonly string[];
 }
 
 function CheckIcon() {

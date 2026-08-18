@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -106,11 +107,15 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/92 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-8">
         <div className="flex items-center gap-9">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex size-[26px] items-center justify-center rounded-[8px] bg-primary-600 text-[14px] font-extrabold text-white">
-              W
-            </span>
-            <span className="text-[17px] font-extrabold tracking-tight text-gray-950">Workwity</span>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/brand/workwity-logo-horizontal.png"
+              alt="Workwity"
+              width={2172}
+              height={724}
+              priority
+              className="h-12 w-[144px] max-w-none"
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">

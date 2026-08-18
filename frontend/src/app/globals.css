@@ -107,6 +107,19 @@ body {
 }
 
 /*
+ * Browsers don't give <button> a pointer cursor by default (unlike <a>), so
+ * every clickable button across the app needs it explicitly. Rather than
+ * adding `cursor-pointer` one-by-one to every raw <button>, set it once here
+ * for the element itself; `:not(:disabled)` keeps disabled buttons on their
+ * own (already-handled) `disabled:cursor-not-allowed` utility instead.
+ */
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
  * Type scale utilities — Design System §3.
  * Desktop values are the default; the max-width query swaps in the mobile
  * size/line-height at the same breakpoint Tailwind's `md:` uses (768px).

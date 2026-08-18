@@ -2,19 +2,11 @@ import type { BonusBadgeResult, WorkTIResultDetail } from "@/data/workti/worktiD
 import { SectionHeader } from "@/components/workti/SectionHeader";
 import { FitSection } from "@/components/workti/FitSection";
 import { CommunicationGrid } from "@/components/workti/CommunicationGrid";
+import { StyleColumn } from "@/components/workti/StyleColumn";
 
 interface WorkTIResultDetailSectionsProps {
   detail: WorkTIResultDetail;
   bonusBadges: BonusBadgeResult[];
-}
-
-function StyleColumn({ label, text }: { label: string; text: string }) {
-  return (
-    <div className="flex flex-col gap-2.5 border-t-2 border-gray-950 pt-4">
-      <span className="text-body-sm font-bold text-gray-950">{label}</span>
-      <p className="text-body-sm leading-6 text-gray-600">{text}</p>
-    </div>
-  );
 }
 
 /**
