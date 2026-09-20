@@ -34,6 +34,7 @@ const NAV_ITEMS: Record<UserRole, NavItem[]> = {
   seeker: [
     { label: "서비스 소개", href: "/about" },
     { label: "공고 찾기", href: "/jobs" },
+    { label: "AI 공고 분석", href: "/job-analysis" },
     { label: "내 Work-TI", href: "/me" },
   ],
   company: [
