@@ -96,6 +96,7 @@ export default function MyWorkTIPage() {
           { label: "결과 공유하기", onClick: handleShare },
           { label: "이미지 저장하기", onClick: handleSaveImage },
         ]}
+        textCta={{ label: "다른 Work-TI 유형 둘러보기", href: "/work-ti" }}
       />
 
       <Toast message={toast} />

@@ -1,6 +1,7 @@
 import { WORK_TI_RESULTS, WORK_TI_RESULT_DETAILS } from "@/data/workti/worktiData";
 import { WorkTICharacterImage } from "@/components/workti/WorkTICharacterImage";
 import { SectionKicker } from "@/components/about/SectionKicker";
+import { Button } from "@/components/ui/Button";
 
 // Real Work-TI result data (not sample/fabricated) — used as the product
 // preview so the section shows an actual result instead of invented axes,
@@ -78,6 +79,17 @@ export function WorkTISection() {
               테스트가 아니며, 결과의 정확성이나 신뢰도를 보장하지 않습니다. 나의 일하는 모습을 가볍게 돌아보고
               설명해보는 하나의 &lsquo;업무 성향 이미지 카드&rsquo;처럼 즐겨주세요.
             </p>
+          </div>
+
+          <div className="pt-2">
+            <Button
+              href="/work-ti"
+              variant="secondary"
+              size="md"
+              className="border-primary-600 text-primary-600 hover:border-primary-700 hover:bg-primary-50 hover:text-primary-700"
+            >
+              16가지 Work-TI 유형 보기
+            </Button>
           </div>
         </div>
 
