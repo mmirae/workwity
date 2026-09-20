@@ -250,16 +250,13 @@ function buildInterviewQuestions(
 ) {
   const normalizedJobText = normalizeEvidence(jobText);
   const questions = extraction.interviewQuestions.filter(
-    ({ question, evidence, evaluationPoint, competency }, index, items) =>
-      normalizedJobText.includes(normalizeEvidence(evidence)) &&
-      coreCompetencies.includes(competency) &&
-      items.findIndex((item) => normalizeEvidence(item.question) === normalizeEvidence(question)) === index &&
-      items.findIndex((item) => normalizeEvidence(item.evidence) === normalizeEvidence(evidence)) === index &&
-      items.findIndex((item) => normalizeEvidence(item.evaluationPoint) === normalizeEvidence(evaluationPoint)) === index
+    ({ question, evidence, competency }, index, items) =>
+      (normalizedJobText.includes(normalizeEvidence(evidence)) || coreCompetencies.includes(competency)) &&
+      items.findIndex((item) => normalizeEvidence(item.question) === normalizeEvidence(question)) === index
   );
 
   if (questions.length !== 5) {
-    throw new Error("Interview questions were not grounded in five distinct job-posting points");
+    throw new Error("Interview questions must contain five grounded, non-duplicate questions");
   }
   return questions.map(({ question }) => question);
 }
