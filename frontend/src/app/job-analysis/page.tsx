@@ -3,6 +3,7 @@
 import { FormEvent, useState, useSyncExternalStore } from "react";
 import { WORK_TI_RESULTS, type WorkTICode } from "@/data/workti/worktiData";
 import { requestJobFitAnalysis } from "@/lib/ai/jobFitAnalysisClient";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import {
   WORK_STYLE_AXIS_META,
   WORK_STYLE_TENDENCY_LABELS,
@@ -159,7 +160,9 @@ function AnalysisResult({ result }: { result: JobFitAnalysisResult }) {
 }
 
 export default function JobAnalysisPage() {
-  const workTICode = useSyncExternalStore(subscribeToStoredResult, getStoredResultCode, () => null);
+  const { role } = useAuth();
+  const storedWorkTICode = useSyncExternalStore(subscribeToStoredResult, getStoredResultCode, () => null);
+  const workTICode = role === "seeker" ? storedWorkTICode : null;
   const [jobText, setJobText] = useState("");
   const [result, setResult] = useState<JobFitAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -193,15 +196,27 @@ export default function JobAnalysisPage() {
           </p>
         </header>
 
-        {workTICode ? (
+        {role === "seeker" ? (
           <>
-            <Card variant="base" className="flex items-center gap-4 p-5">
-              <span className="text-code-lg text-primary-600">{workTICode}</span>
-              <div>
-                <p className="text-caption text-gray-500">현재 내 Work-TI</p>
-                <p className="text-body-md font-bold text-gray-950">{WORK_TI_RESULTS[workTICode].title}</p>
-              </div>
-            </Card>
+            {workTICode ? (
+              <Card variant="base" className="flex items-center gap-4 p-5">
+                <span className="text-code-lg text-primary-600">{workTICode}</span>
+                <div>
+                  <p className="text-caption text-gray-500">현재 내 Work-TI</p>
+                  <p className="text-body-md font-bold text-gray-950">{WORK_TI_RESULTS[workTICode].title}</p>
+                </div>
+              </Card>
+            ) : (
+              <Card variant="featured" className="flex flex-col items-start gap-4">
+                <div>
+                  <p className="text-caption text-gray-500">현재 내 Work-TI</p>
+                  <p className="mt-2 text-body-lg font-bold text-gray-950">검사 결과가 없습니다.</p>
+                </div>
+                <Button href="/test/start" variant="secondary" size="md">
+                  Work-TI 테스트하러 가기
+                </Button>
+              </Card>
+            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <label htmlFor="job-text" className="text-body-md font-bold text-gray-950">
@@ -219,9 +234,22 @@ export default function JobAnalysisPage() {
                 <span className="text-caption text-gray-400">
                   {jobText.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()}자
                 </span>
-                <Button type="submit" variant="primary" size="lg" loading={isLoading} disabled={!jobText.trim()}>
-                  {isLoading ? "분석 중..." : "AI로 분석하기"}
-                </Button>
+                <div className="flex flex-col items-stretch gap-2 sm:items-end">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    loading={isLoading}
+                    disabled={!workTICode || !jobText.trim()}
+                  >
+                    {isLoading ? "분석 중..." : "AI로 분석하기"}
+                  </Button>
+                  {!workTICode && (
+                    <span className="text-caption text-gray-500">
+                      Work-TI 검사 후 AI 공고 분석을 이용할 수 있어요.
+                    </span>
+                  )}
+                </div>
               </div>
               {error && <p className="rounded-md bg-danger-100 p-4 text-body-sm text-danger-600">{error}</p>}
             </form>
@@ -229,13 +257,17 @@ export default function JobAnalysisPage() {
         ) : (
           <Card variant="featured" className="flex flex-col items-start gap-4">
             <div>
-              <h2 className="text-heading-3 text-gray-950">먼저 내 Work-TI를 확인해 주세요.</h2>
+              <h2 className="text-heading-3 text-gray-950">
+                {role === "company" ? "구직자 계정으로 이용해주세요." : "AI 공고 분석을 사용하려면 먼저 로그인해주세요."}
+              </h2>
               <p className="mt-2 text-body-sm leading-6 text-gray-600">
-                저장된 Work-TI 결과가 있어야 공고의 업무 특성과 함께 분석할 수 있습니다.
+                {role === "company"
+                  ? "AI 공고 분석은 구직자의 저장된 Work-TI 결과를 바탕으로 제공됩니다."
+                  : "상단 로그인 메뉴에서 구직자로 로그인하거나 Work-TI 검사를 먼저 진행할 수 있습니다."}
               </p>
             </div>
             <Button href="/test/start" variant="primary" size="lg">
-              Work-TI 검사하기
+              내 Work-TI 알아보기
             </Button>
           </Card>
         )}
