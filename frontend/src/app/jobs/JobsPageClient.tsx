@@ -14,6 +14,7 @@ import {
 import { computeJobMatch } from "@/lib/workti/matchJob";
 import { getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
 import { JobCard } from "@/components/jobs/JobCard";
+import { DemoJobNotice } from "@/components/jobs/DemoJobNotice";
 import { Button } from "@/components/ui/Button";
 
 type SortKey = "match" | "recent";
@@ -90,8 +91,11 @@ export default function JobsPageClient() {
   const myDefinition = userResult ? WORK_TI_RESULTS[userResult.code] : null;
 
   return (
-    <div className="mx-auto grid max-w-[1200px] items-start gap-6 px-8 py-8 md:grid-cols-[264px_1fr]">
-      <aside className="flex flex-col gap-4 md:sticky md:top-22">
+    <div className="mx-auto grid max-w-[1200px] grid-cols-[minmax(0,1fr)] items-start gap-6 px-8 py-8 md:grid-cols-[264px_minmax(0,1fr)]">
+      <div className="md:col-span-2">
+        <DemoJobNotice />
+      </div>
+      <aside className="flex min-w-0 flex-col gap-4 md:sticky md:top-22">
         {userResult && myDefinition ? (
           <div className="flex flex-col gap-2 rounded-lg bg-primary-100 p-5">
             <span className="text-code-sm text-primary-700">MY WORK-TI</span>
@@ -158,8 +162,8 @@ export default function JobsPageClient() {
         </div>
       </aside>
 
-      <main className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+      <main className="flex min-w-0 flex-col gap-4">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
             <h1 className="text-heading-3 text-gray-950">내게 맞는 공고</h1>
             <span className="text-body-sm text-gray-500">{sorted.length}개 공고</span>
@@ -204,6 +208,7 @@ export default function JobsPageClient() {
                 company={job.company}
                 title={job.title}
                 tags={job.hiringProcessFilterIds.map(getHiringProcessFilterLabel)}
+                isDemo
                 matchPct={matchPct}
               />
             ))}

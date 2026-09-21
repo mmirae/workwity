@@ -13,6 +13,7 @@ import { recordRecentJob } from "@/lib/jobs/recentJobsStorage";
 import { Button } from "@/components/ui/Button";
 import { ApplyModal } from "@/components/jobs/ApplyModal";
 import { JobSaveHeart } from "@/components/jobs/JobSaveHeart";
+import { DemoJobBadge, DemoJobNotice } from "@/components/jobs/DemoJobNotice";
 
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>();
@@ -58,13 +59,16 @@ export default function JobDetailPage() {
         ← 공고 리스트로
       </Link>
 
-      <div className="grid items-start gap-6 md:grid-cols-[1fr_348px]">
-        <div className="flex flex-col gap-4.5">
+      <DemoJobNotice compact />
+
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 md:grid-cols-[minmax(0,1fr)_348px]">
+        <div className="flex min-w-0 flex-col gap-4.5">
           <div className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-7 shadow-xs">
             <div className="flex items-center gap-2">
               <JobSaveHeart jobId={job.id} />
               <span className="text-body-sm text-gray-500">{job.company}</span>
             </div>
+            <DemoJobBadge />
             <h1 className="text-heading-2 text-gray-950">{job.title}</h1>
             <span className="text-caption text-gray-400">
               {job.functionCategory} · {job.careerLabel}
@@ -155,7 +159,7 @@ export default function JobDetailPage() {
           </div>
         </div>
 
-        <aside className="flex flex-col gap-3.5 md:sticky md:top-22">
+        <aside className="flex min-w-0 flex-col gap-3.5 md:sticky md:top-22">
           <div className="flex flex-col gap-1.5 rounded-lg border border-gray-200 bg-white p-5 shadow-xs">
             <span className="text-code-sm text-gray-400">TEAM WORK-TI</span>
             <div className="flex items-baseline gap-2.5">
