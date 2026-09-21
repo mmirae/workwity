@@ -54,6 +54,7 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +78,17 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [mobileMenuOpen]);
+
   // SSR-safe one-time read of the company result (see companyStorage.ts) —
   // avoids the hydration-mismatch/setState-in-effect issues a plain
   // `useEffect` + `useState` read would have here.
@@ -99,7 +111,13 @@ export function Header() {
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
+    setMobileMenuOpen(false);
     router.push("/");
+  };
+
+  const handleMobileLogin = () => {
+    setMobileMenuOpen(false);
+    setLoginModalOpen(true);
   };
 
   if (isFocusedRoute(pathname)) return null;
@@ -138,7 +156,7 @@ export function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="hidden items-center gap-3 md:flex">
           {isLoggedIn && profileMenu ? (
             <div className="relative" ref={menuRef}>
               <button
@@ -176,7 +194,77 @@ export function Header() {
             </Button>
           )}
         </div>
+
+        <button
+          type="button"
+          aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="flex size-10 items-center justify-center rounded-md text-gray-700 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:shadow-focus md:hidden"
+        >
+          {mobileMenuOpen ? (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
+            </svg>
+          )}
+        </button>
       </div>
+
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-x-0 top-16 z-50 h-[calc(100dvh-4rem)] bg-gray-950/30 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <nav
+            id="mobile-navigation"
+            aria-label="모바일 메뉴"
+            className="w-full border-b border-gray-200 bg-white px-5 py-4 shadow-md"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mx-auto flex max-w-[1200px] flex-col gap-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "rounded-md px-3 py-3 text-body-md font-semibold transition-colors",
+                      isActive ? "bg-primary-50 text-primary-700" : "text-gray-700 hover:bg-gray-100"
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <div className="my-2 border-t border-gray-200" />
+              {isLoggedIn ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-md px-3 py-3 text-left text-body-md font-semibold text-gray-500 transition-colors hover:bg-gray-100"
+                >
+                  로그아웃
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleMobileLogin}
+                  className="rounded-md px-3 py-3 text-left text-body-md font-semibold text-primary-600 transition-colors hover:bg-primary-50"
+                >
+                  로그인
+                </button>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
 
       <RoleLoginModal open={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
     </header>
