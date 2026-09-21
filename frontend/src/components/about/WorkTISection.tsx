@@ -66,6 +66,10 @@ export function WorkTISection() {
           <p className="text-body-md leading-7 text-gray-700">
             두 결과는 채용 과정에서 서로를 이해하기 위한 참고 정보로 활용됩니다.
           </p>
+          <p className="text-body-md font-semibold leading-8 text-gray-950">
+            Work-TI는 구직자와 기업 모두의 &lsquo;일하는 방식&rsquo;을 같은 기준으로 표현하기 위한 공통
+            언어입니다.
+          </p>
 
           <div className="flex items-start gap-2.5">
             <span

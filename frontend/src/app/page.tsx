@@ -4,6 +4,7 @@ import { LandingLoginButton } from "@/components/landing/LandingLoginButton";
 import { CompassIcon, OverlapCirclesIcon, TimerIcon } from "@/components/landing/icons";
 import { WorkTISection } from "@/components/about/WorkTISection";
 import { WorkIdentitySection } from "@/components/about/WorkIdentitySection";
+import { AIJobAnalysisSection } from "@/components/landing/AIJobAnalysisSection";
 
 const FEATURES = [
   {
@@ -98,7 +99,7 @@ export default function LandingPage() {
       <section className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-6 px-8 py-18 text-center md:py-24">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 px-3.5 py-1.5 text-body-sm font-semibold text-primary-600">
-            업무 성향 기반 채용 플랫폼
+            Work-TI × AI 채용공고 분석
           </span>
           <h1 className="max-w-[760px] text-display-xl text-gray-950">
             채용 방식부터, 일하는 방식까지.
@@ -106,13 +107,16 @@ export default function LandingPage() {
             <span className="text-primary-600">나와 맞는 회사를 찾아보세요.</span>
           </h1>
           <p className="max-w-[560px] text-body-lg text-gray-600">
-            구직자와 기업이 각각 Work-TI 테스트로 업무 성향을 알아보고, 
+            Work-TI로 나의 업무 성향을 알아보고,
             <br />
-            서로의 일하는 방식이 얼마나 잘 맞는지 확인합니다.
+            AI로 채용공고를 분석해 나와 맞는 업무 환경인지 확인해보세요.
           </p>
-          <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
-            <Button variant="primary" size="lg" href="/test/start">
-              Work-TI 테스트 시작하기 →
+          <div className="mt-1 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+            <Button variant="primary" size="lg" href="/test/start" className="w-full sm:w-auto">
+              내 Work-TI 알아보기
+            </Button>
+            <Button variant="secondary" size="lg" href="/job-analysis" className="w-full sm:w-auto">
+              AI 공고 분석하기
             </Button>
           </div>
           <span className="text-caption text-gray-500">30문항, 약 3분 소요</span>
@@ -122,6 +126,9 @@ export default function LandingPage() {
       {/* How it works */}
       <WorkTISection />
 
+      {/* AI job analysis */}
+      <AIJobAnalysisSection />
+
       {/* Work Identity */}
       <WorkIdentitySection />
 
@@ -129,15 +136,14 @@ export default function LandingPage() {
       <section className="bg-gray-50">
         <div className="mx-auto flex max-w-[1200px] flex-col items-center gap-5 px-8 py-20 text-center md:py-24">
           <h2 className="text-heading-2 text-gray-950">채용의 새로운 시작, 워크위티</h2>
-          <Button
-            variant="primary"
-            size="lg"
-            href="https://open.kakao.com/o/sz9GIwJi"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            기업 서비스 문의하기 →
-          </Button>
+          <div className="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+            <Button variant="primary" size="lg" href="/test/start" className="w-full sm:w-auto">
+              내 Work-TI 알아보기
+            </Button>
+            <Button variant="secondary" size="lg" href="/job-analysis" className="w-full sm:w-auto">
+              AI 공고 분석하기
+            </Button>
+          </div>
         </div>
       </section>
     </>
