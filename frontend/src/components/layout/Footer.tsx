@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { isFocusedRoute } from "@/lib/layout/focusedRoutes";
 
@@ -13,7 +14,9 @@ export function Footer() {
         <span>© 2026 Workwity</span>
         <div className="flex gap-5">
           <span className="cursor-pointer hover:text-gray-700">이용약관</span>
-          <span className="cursor-pointer hover:text-gray-700">개인정보처리방침</span>
+          <Link href="/privacy" className="hover:text-gray-700">
+            개인정보처리방침
+          </Link>
         </div>
       </div>
     </footer>

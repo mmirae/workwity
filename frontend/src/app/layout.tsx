@@ -5,6 +5,9 @@ import { AuthProvider } from "@/lib/auth/AuthProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
+
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -33,6 +36,7 @@ export default function RootLayout({
           </div>
         </AuthProvider>
         <Analytics />
+        {gaMeasurementId && <GoogleAnalytics gaId={gaMeasurementId} />}
       </body>
     </html>
   );
