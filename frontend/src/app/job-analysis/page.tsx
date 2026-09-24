@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState, useSyncExternalStore } from "react";
+import { FormEvent, useRef, useState, useSyncExternalStore } from "react";
 import { WORK_TI_RESULTS, type WorkTICode } from "@/data/workti/worktiData";
 import { requestJobFitAnalysis } from "@/lib/ai/jobFitAnalysisClient";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -10,6 +10,7 @@ import {
   type JobFitAnalysisResult,
 } from "@/lib/ai/jobFitAnalysisSchema";
 import { getStoredResult } from "@/lib/workti/testStorage";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
@@ -167,20 +168,32 @@ export default function JobAnalysisPage() {
   const [result, setResult] = useState<JobFitAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const requestInFlightRef = useRef(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!workTICode || !jobText.trim() || isLoading) return;
+    if (!workTICode || !jobText.trim() || requestInFlightRef.current) return;
 
+    requestInFlightRef.current = true;
     setIsLoading(true);
     setError(null);
     setResult(null);
+    trackAnalyticsEvent("job_analysis_start", {
+      job_source: "pasted_text",
+      workti_type: workTICode,
+    });
 
     try {
-      setResult(await requestJobFitAnalysis(jobText.trim(), workTICode));
+      const analysisResult = await requestJobFitAnalysis(jobText.trim(), workTICode);
+      setResult(analysisResult);
+      trackAnalyticsEvent("job_analysis_complete", {
+        job_source: "pasted_text",
+        workti_type: workTICode,
+      });
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : "AI 분석 중 오류가 발생했습니다.");
     } finally {
+      requestInFlightRef.current = false;
       setIsLoading(false);
     }
   };

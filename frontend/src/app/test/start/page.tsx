@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 
 const OPTIONS = [
   {
@@ -37,6 +40,11 @@ export default function TestStartPage() {
           <Link
             key={option.key}
             href={option.href}
+            onClick={() => {
+              if (option.key === "seeker") {
+                trackAnalyticsEvent("workti_test_start", { user_role: "seeker" });
+              }
+            }}
             className="flex flex-col items-start gap-3 rounded-lg border border-gray-200 bg-white p-7 text-left shadow-xs transition-colors hover:border-primary-300 hover:bg-primary-50 focus-visible:outline-none focus-visible:shadow-focus"
           >
             <h2 className="text-heading-3 text-gray-950">{option.title}</h2>

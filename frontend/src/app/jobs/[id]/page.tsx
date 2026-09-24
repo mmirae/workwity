@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { createWorkTIResultFromScores } from "@/data/workti/worktiData";
@@ -10,6 +10,7 @@ import { buildAiFitSummary } from "@/lib/workti/aiFitSummary";
 import { getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
 import { getApplication, saveApplication } from "@/lib/jobs/applicationStorage";
 import { recordRecentJob } from "@/lib/jobs/recentJobsStorage";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 import { Button } from "@/components/ui/Button";
 import { ApplyModal } from "@/components/jobs/ApplyModal";
 import { JobSaveHeart } from "@/components/jobs/JobSaveHeart";
@@ -23,15 +24,22 @@ export default function JobDetailPage() {
   const [userResult, setUserResult] = useState<StoredWorkTIResult | null | undefined>(undefined);
   const [applied, setApplied] = useState(false);
   const [applyOpen, setApplyOpen] = useState(false);
+  const viewedJobIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!job) {
       router.replace("/jobs");
       return;
     }
+    // Browser storage is available only after hydration, so synchronize its snapshots here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserResult(getStoredResult());
     setApplied(Boolean(getApplication(job.id)));
     recordRecentJob(job.id);
+    if (viewedJobIdRef.current !== job.id) {
+      viewedJobIdRef.current = job.id;
+      trackAnalyticsEvent("job_detail_view", { job_source: "demo" });
+    }
   }, [job, router]);
 
   const companyFull = useMemo(() => (job ? createWorkTIResultFromScores(job.companyScores) : null), [job]);

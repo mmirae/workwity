@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   COMPANY_BONUS_QUESTIONS,
@@ -14,6 +14,7 @@ import {
 } from "@/data/workti/companyWorktiData";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { saveCompanyProfile, saveCompanyResult, type CompanyProfile } from "@/lib/company/companyStorage";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 import { AXIS_FULL_LABEL } from "@/lib/workti/axisMeta";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { QuestionCard } from "@/components/workti/QuestionCard";
@@ -52,6 +53,8 @@ export default function CompanyOnboardingPage() {
   const [testIndex, setTestIndex] = useState(0);
   const [mainAnswers, setMainAnswers] = useState<CompanyMainAnswers>({});
   const [bonusAnswers, setBonusAnswers] = useState<CompanyBonusAnswers>({});
+  const testStartedRef = useRef(false);
+  const testCompletedRef = useRef(false);
 
   const handleStartTest = () => {
     if (!form.name?.trim()) {
@@ -65,6 +68,10 @@ export default function CompanyOnboardingPage() {
       industry: form.industry ?? INDUSTRY_OPTIONS[0],
       intro: form.intro?.trim(),
     });
+    if (!testStartedRef.current) {
+      testStartedRef.current = true;
+      trackAnalyticsEvent("workti_test_start", { user_role: "company" });
+    }
     setPhase("test");
   };
 
@@ -73,6 +80,13 @@ export default function CompanyOnboardingPage() {
     const result = calculateCompanyWorkTIResult(finalMain);
     const badges = getCompanyBonusBadges(finalBonus, false);
     saveCompanyResult({ code: result.code, scores: result.scores, axes: result.axes, bonusBadges: badges });
+    if (!testCompletedRef.current) {
+      testCompletedRef.current = true;
+      trackAnalyticsEvent("workti_test_complete", {
+        user_role: "company",
+        workti_type: result.code,
+      });
+    }
     window.setTimeout(() => setPhase("login"), 1200);
   };
 

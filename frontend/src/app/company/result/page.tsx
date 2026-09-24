@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { COMPANY_WORK_TI_RESULTS } from "@/data/workti/companyWorktiData";
 import { WORK_TI_RESULT_DETAILS } from "@/data/workti/worktiData";
@@ -18,6 +18,7 @@ import { CommunicationGrid } from "@/components/workti/CommunicationGrid";
 import { StyleColumn } from "@/components/workti/StyleColumn";
 import { NextAction } from "@/components/workti/NextAction";
 import { Button } from "@/components/ui/Button";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 
 export default function CompanyResultPage() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function CompanyResultPage() {
     getCompanyResultSnapshot,
     getCompanyStorageServerSnapshot
   );
+  const viewedResultCodeRef = useRef<string | null>(null);
 
   useEffect(() => {
     // Read the snapshot directly here rather than depending on `result`:
@@ -39,6 +41,16 @@ export default function CompanyResultPage() {
       router.replace("/company/onboarding");
     }
   }, [router]);
+
+  useEffect(() => {
+    if (!result || viewedResultCodeRef.current === result.code) return;
+
+    viewedResultCodeRef.current = result.code;
+    trackAnalyticsEvent("workti_result_view", {
+      user_role: "company",
+      workti_type: result.code,
+    });
+  }, [result]);
 
   if (!result) return null;
 

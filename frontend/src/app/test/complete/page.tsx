@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { calculateWorkTIResult, getBonusBadges } from "@/data/workti/worktiData";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { getStoredAnswers, saveResult } from "@/lib/workti/testStorage";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 
@@ -14,6 +15,7 @@ export default function TestCompletePage() {
   const router = useRouter();
   const { login } = useAuth();
   const [stage, setStage] = useState<Stage>("loading");
+  const completionTrackedRef = useRef(false);
 
   useEffect(() => {
     const { main, bonus } = getStoredAnswers();
@@ -34,6 +36,14 @@ export default function TestCompletePage() {
       axes: result.axes,
       bonusBadges: badges,
     });
+
+    if (!completionTrackedRef.current) {
+      completionTrackedRef.current = true;
+      trackAnalyticsEvent("workti_test_complete", {
+        user_role: "seeker",
+        workti_type: result.code,
+      });
+    }
 
     const timer = window.setTimeout(() => setStage("login"), 1200);
     return () => window.clearTimeout(timer);

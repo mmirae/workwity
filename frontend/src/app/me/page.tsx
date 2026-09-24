@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { WORK_TI_RESULT_DETAILS, WORK_TI_RESULTS } from "@/data/workti/worktiData";
 import { clearStoredAnswers, getStoredResult, type StoredWorkTIResult } from "@/lib/workti/testStorage";
+import { trackAnalyticsEvent } from "@/lib/analytics/ga";
 import { WorkTIReportCard } from "@/components/workti/WorkTIReportCard";
 import { WorkTIResultDetailSections } from "@/components/workti/WorkTIResultDetailSections";
 import { WorkTIShareCard } from "@/components/workti/WorkTIShareCard";
@@ -16,6 +17,7 @@ export default function MyWorkTIPage() {
   const [result, setResult] = useState<StoredWorkTIResult | null | undefined>(undefined);
   const [toast, setToast] = useState<string | null>(null);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const viewedResultCodeRef = useRef<string | null>(null);
 
   useEffect(() => {
     const stored = getStoredResult();
@@ -23,7 +25,16 @@ export default function MyWorkTIPage() {
       router.replace("/test");
       return;
     }
+    // localStorage is available only after hydration, so synchronize its snapshot here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setResult(stored);
+    if (viewedResultCodeRef.current !== stored.code) {
+      viewedResultCodeRef.current = stored.code;
+      trackAnalyticsEvent("workti_result_view", {
+        user_role: "seeker",
+        workti_type: stored.code,
+      });
+    }
   }, [router]);
 
   const showToast = (message: string) => {
